@@ -7,16 +7,25 @@ class Program
     static void Main(string[] args)
     {
         //string text = File.ReadAllText("commands.txt");
-        string testEncode = "AAAAAAAATATTTCGCTTTTCAAAAATTGTCAGATGAGAGAAAAAATAAAA";
-        string testDecode = "3TIFD8U";
-        Console.WriteLine(testEncode);
-        Console.WriteLine(EncodeProtein(testEncode));
-        Console.WriteLine("\n" + testDecode);
-        Console.WriteLine(DecodeProtein(testDecode));
+        //string testEncode = "AAAAAAAATATTTCGCTTTTCAAAAATTGTCAGATGAGAGAAAAAATAAAA";
+        //string testDecode = "3TIFD8U";
+        //Console.WriteLine(testEncode);
+        //Console.WriteLine(EncodeProtein(testEncode));
+        //Console.WriteLine("\n" + testDecode);
+        //Console.WriteLine(DecodeProtein(testDecode));
 
-        Console.WriteLine(search("MLQSIIKNIWIPMKPYYTKVYQEIWIGMGLMGFIVYKIRAADKRSKALKASAPAPGHH", "SIIK") ? "FOUND" : "NOT FOUND");
-        Console.WriteLine("diff: " + diff("MLQSIIKNIWIPMKPYYTKVYQEIWIGMGLMGFIVYKIRAADKRSKALKASAPAPGHH", "MDTTGKVIKCKAAVAWEAGKPLTIEEVEVAPPKAHEVRVKIHATGVCHTDAYTLSGSDPEGLFPVILGHEGAGTVESVGEGVTK"));
-        (char prot, int count) result = mode("MDTTGKVIKCKAAVAWEAGKPLTIEEVEVAPPKAHEVRVKIHATGVCHTDAYTLSGSDPEGLFPVILGHEGAGTVESVGEGVTK");
+        methodCheck();
+    }
+
+    static void methodCheck()
+    {
+        string text1 = "MLQSIIKNIWIPMKPYYTKVYQEIWIGMGLMGFIVYKIRAADKRSKALKASAPAPGHH";
+        string text2 = "MDTTGKVIKCKAAVAWEAGKPLTIEEVEVAPPKAHEVRVKIHATGVCHTDAYTLSGSDPEGLFPVILGHEGAGTVESVGEGVTK";
+        DecodeProtein(text1);
+        DecodeProtein(text2);
+        Console.WriteLine(search(text1, "SIIK") ? "FOUND" : "NOT FOUND");
+        Console.WriteLine("diff: " + diff(text1, text2));
+        (char prot, int count) result = mode(text2);
         Console.WriteLine(result.prot + ":" + result.count);
     }
 
