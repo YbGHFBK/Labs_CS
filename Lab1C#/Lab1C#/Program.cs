@@ -1,26 +1,50 @@
 ﻿using System;
 using System.Text;
-using static System.Net.Mime.MediaTypeNames;
 
 class Program
 {
+    public static string map = "ACDEFGHIKLMNPQRSTVWY";
+
     static void Main(string[] args)
     {
-        //string text = File.ReadAllText("commands.txt");
-        //string testEncode = "AAAAAAAATATTTCGCTTTTCAAAAATTGTCAGATGAGAGAAAAAATAAAA";
-        //string testDecode = "3TIFD8U";
-        //Console.WriteLine(testEncode);
-        //Console.WriteLine(EncodeProtein(testEncode));
-        //Console.WriteLine("\n" + testDecode);
-        //Console.WriteLine(DecodeProtein(testDecode));
 
-        methodCheck();
+        /*string text = File.ReadAllText("commands.txt");
+        string testEncode = "AAAAAAAATATTTCGCTTTTCAAAAATTGTCAGATGAGAGAAAAAATAAAA";
+        string testDecode = "3TIFD8U";
+        Console.WriteLine(testEncode);
+        Console.WriteLine(EncodeProtein(testEncode));
+        Console.WriteLine("\n" + testDecode);
+        Console.WriteLine(DecodeProtein(testDecode)); */
+
+        CheckMethod();
     }
 
-    static void methodCheck()
+    static bool CheckProtein(string input)
+    {
+        bool isWrong = false;
+        foreach (char ch  in input)
+        {
+            if(!map.Contains(ch))
+            {
+                isWrong = true;
+            }
+        }
+
+        if(isWrong)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    static void CheckMethod()
     {
         string text1 = "MLQSIIKNIWIPMKPYYTKVYQEIWIGMGLMGFIVYKIRAADKRSKALKASAPAPGHH";
         string text2 = "MDTTGKVIKCKAAVAWEAGKPLTIEEVEVAPPKAHEVRVKIHATGVCHTDAYTLSGSDPEGLFPVILGHEGAGTVESVGEGVTK";
+
+        CheckProtein(text1);
+        CheckProtein(text2);
+
         DecodeProtein(text1);
         DecodeProtein(text2);
         Console.WriteLine(search(text1, "SIIK") ? "FOUND" : "NOT FOUND");
