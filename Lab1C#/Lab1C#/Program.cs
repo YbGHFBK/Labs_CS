@@ -7,16 +7,24 @@ class Program
 
     static void Main(string[] args)
     {
-
-        /*string text = File.ReadAllText("commands.txt");
-        string testEncode = "AAAAAAAATATTTCGCTTTTCAAAAATTGTCAGATGAGAGAAAAAATAAAA";
-        string testDecode = "3TIFD8U";
-        Console.WriteLine(testEncode);
-        Console.WriteLine(EncodeProtein(testEncode));
-        Console.WriteLine("\n" + testDecode);
-        Console.WriteLine(DecodeProtein(testDecode)); */
+        string[] commands = ReadFile("TextFiles/commands.txt");
+        string[] sequences = ReadFile("TextFiles/sequences.txt");
 
         CheckMethod();
+    }
+
+    static string[] ReadFile(string path)
+    {
+        string[] text = File.ReadAllLines(path);
+        return text;
+    }
+
+    static void AppendToFile(string path, string text, bool doAppend)
+    {
+        using (StreamWriter sw = new StreamWriter(path, doAppend))
+        {
+            sw.WriteLine(text);
+        }
     }
 
     static bool CheckProtein(string input)
