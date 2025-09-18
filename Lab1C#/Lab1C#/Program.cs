@@ -1,19 +1,25 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 
 class Program
 {
     public static string map = "ACDEFGHIKLMNPQRSTVWY";
+    public static int comCounter = 1;
 
     static void Main(string[] args)
     {
+
+        using (StreamWriter sw = new StreamWriter("TextFiles/genedata.txt", false))
+        {
+            sw.WriteLine("Maxim\nGenetic Searching\n" + new string('-', 40) + '\n');
+        }
+
         string[] commands = ReadFile("TextFiles/commands.txt");
         string[] sequences = ReadFile("TextFiles/sequences.txt");
 
 
         GiveCommands(commands, sequences);
-
-        CheckMethod();
     }
 
     static string[] ReadFile(string path)
@@ -22,11 +28,45 @@ class Program
         return text;
     }
 
-    static void AppendToFile(string path, string text, bool doAppend)
+    static void AppendToFile(string path, string command, string result, bool doAppend = true)
     {
+        StringBuilder sb = new StringBuilder();
+        Console.WriteLine(comCounter.ToString("000") + " " + command);
+        sb.Append(comCounter.ToString("000")  + " " + command + '\n');
+
+        comCounter++;
+
+        switch (command.Split('\t')[0])
+        {
+            case "search":
+                {
+                    Console.WriteLine("organism".PadRight(25) + "protein".PadRight(25));
+                    sb.Append("organism".PadRight(25) + "protein".PadRight(40) + '\n');
+
+                    Console.WriteLine(result + '\n' + new string('-', 40));
+                    sb.Append(result + '\n' + new string('-', 40) + '\n');
+
+                    break;
+                }
+            case "diff":
+                {
+                    Console.WriteLine("amino-acids difference:\n" + result + '\n' + new string('-', 40));
+                    sb.Append("amino-acids difference:\n" + result + '\n' + new string('-', 40) + '\n');
+
+                    break;
+                }
+            case "mode":
+                {
+                    Console.WriteLine("amino-acids occurs:\n" + result + '\n' + new string('-', 40));
+                    sb.Append("amino-acids occurs:\n" + result + '\n' + new string('-', 40) + '\n');
+
+                    break;
+                }
+        }
+        
         using (StreamWriter sw = new StreamWriter(path, doAppend))
         {
-            sw.WriteLine(text);
+            sw.WriteLine(sb.ToString());
         }
     }
 
@@ -41,11 +81,11 @@ class Program
                 case "search":
                     {
                         bool result = false;
-                        string organism, protein;
+                        string organism = null, protein = null;
                         foreach (string sequence in sequnces)
                         {
                             string[] seqParts = sequence.Split("\t");
-                            result = Search(comParts[1], seqParts[2]);
+                            result = Search(seqParts[2], comParts[1]);
                             if (result == true)
                             {
                                 organism = seqParts[1];
@@ -53,10 +93,8 @@ class Program
                                 break;
                             }
                         }
-                        if (result == false)
-                        {
-                            //
-                        }
+
+                        AppendToFile("TextFiles/genedata.txt", command, (result ? (organism.PadRight(25) + protein.PadRight(25)) : "NOT FOUND")) ;
 
                         break;
                     }
@@ -68,21 +106,24 @@ class Program
 
                         foreach (string sequence in sequnces)
                         {
-                            if (sequence == comParts[1]) protein1 = comParts[1];
-                            if (sequence == comParts[2]) protein1 = comParts[2];
+                            string[] seqParts = sequence.Split('\t');
+                            if (seqParts[0] == comParts[1]) protein1 = seqParts[2];
+                            if (seqParts[0] == comParts[2]) protein2 = seqParts[2];
                         }
 
-                        int diff = 0;
+                        string result;
 
                         if (protein1 != null && protein2 != null)
                         {
-                            diff = Diff(protein1, protein2);
-                            //
+                            int diff = Diff(protein1, protein2);
+                            result = diff.ToString();
                         }
                         else
                         {
-                            //
+                            result = "MISSING";
                         }
+
+                        AppendToFile("TextFiles/genedata.txt", command, result);
 
                         break;
                     }
@@ -93,23 +134,28 @@ class Program
 
                         foreach(string sequence in sequnces)
                         {
-                            if(sequence == comParts[1])
+                            string[] seqParts = sequence.Split('\t');
+
+                            if (seqParts[0] == comParts[1])
                             {
-                                protein = comParts[1];
+                                protein = seqParts[2];
                                 break;
                             }
                         }
 
+                        string result;
+
                         if(protein != null)
                         {
-                            Mode(protein);
-                            //
+                            var mode = Mode(protein);
+                            result = mode.prot + ":" + mode.count.ToString();
                         }
                         else
                         {
-                            //
+                            result = "MISSING";
                         }
 
+                        AppendToFile("TextFiles/genedata.txt", command, result);
 
                         break;
                     }
@@ -136,22 +182,6 @@ class Program
         return true;
     }
 
-    static void CheckMethod()
-    {
-        string text1 = "MLQSIIKNIWIPMKPYYTKVYQEIWIGMGLMGFIVYKIRAADKRSKALKASAPAPGHH";
-        string text2 = "MDTTGKVIKCKAAVAWEAGKPLTIEEVEVAPPKAHEVRVKIHATGVCHTDAYTLSGSDPEGLFPVILGHEGAGTVESVGEGVTK";
-
-        CheckProtein(text1);
-        CheckProtein(text2);
-
-        DecodeProtein(text1);
-        DecodeProtein(text2);
-        Console.WriteLine(Search(text1, "SIIK") ? "FOUND" : "NOT FOUND");
-        Console.WriteLine("diff: " + Diff(text1, text2));
-        (char prot, int count) result = Mode(text2);
-        Console.WriteLine(result.prot + ":" + result.count);
-    }
-
     static bool Search(string input, string desiredSequence)
     {
         return input.Contains(desiredSequence);
@@ -173,12 +203,13 @@ class Program
 
     static (char prot, int count) Mode(string input)
     {
-        int[] map = new int[26];
+        
+        int[] alp = new int[26];
         foreach (char ch in input)
         {
             if (ch >= 'A' && ch <= 'Z')
             {
-                map[ch - 'A']++;
+                alp[ch - 'A']++;
             }
         }
         int maxValue = 0;
