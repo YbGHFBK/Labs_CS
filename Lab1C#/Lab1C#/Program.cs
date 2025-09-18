@@ -85,6 +85,10 @@ class Program
                         foreach (string sequence in sequnces)
                         {
                             string[] seqParts = sequence.Split("\t");
+
+                            DecodeProtein(seqParts[2]);
+                            DecodeProtein(comParts[1]);
+
                             result = Search(seqParts[2], comParts[1]);
                             if (result == true)
                             {
@@ -107,6 +111,11 @@ class Program
                         foreach (string sequence in sequnces)
                         {
                             string[] seqParts = sequence.Split('\t');
+
+                            DecodeProtein(seqParts[2]);
+                            DecodeProtein(comParts[1]);
+                            DecodeProtein(comParts[2]);
+
                             if (seqParts[0] == comParts[1]) protein1 = seqParts[2];
                             if (seqParts[0] == comParts[2]) protein2 = seqParts[2];
                         }
@@ -135,6 +144,9 @@ class Program
                         foreach(string sequence in sequnces)
                         {
                             string[] seqParts = sequence.Split('\t');
+
+                            DecodeProtein(seqParts[2]);
+                            DecodeProtein(comParts[1]);
 
                             if (seqParts[0] == comParts[1])
                             {
@@ -203,13 +215,13 @@ class Program
 
     static (char prot, int count) Mode(string input)
     {
-        
-        int[] alp = new int[26];
+
+        int[] map = new int[26];
         foreach (char ch in input)
         {
             if (ch >= 'A' && ch <= 'Z')
             {
-                alp[ch - 'A']++;
+                map[ch - 'A']++;
             }
         }
         int maxValue = 0;
