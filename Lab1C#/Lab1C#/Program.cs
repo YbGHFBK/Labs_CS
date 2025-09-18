@@ -10,6 +10,9 @@ class Program
         string[] commands = ReadFile("TextFiles/commands.txt");
         string[] sequences = ReadFile("TextFiles/sequences.txt");
 
+
+        GiveCommands(commands, sequences);
+
         CheckMethod();
     }
 
@@ -24,6 +27,94 @@ class Program
         using (StreamWriter sw = new StreamWriter(path, doAppend))
         {
             sw.WriteLine(text);
+        }
+    }
+
+    static void GiveCommands(string[] commands, string[] sequnces)
+    {
+        foreach (string command in commands)
+        {
+            string[] comParts = command.Split('\t');
+
+            switch (comParts[0])
+            {
+                case "search":
+                    {
+                        bool result = false;
+                        string organism, protein;
+                        foreach (string sequence in sequnces)
+                        {
+                            string[] seqParts = sequence.Split("\t");
+                            result = Search(comParts[1], seqParts[2]);
+                            if (result == true)
+                            {
+                                organism = seqParts[1];
+                                protein = seqParts[0];
+                                break;
+                            }
+                        }
+                        if (result == false)
+                        {
+                            //
+                        }
+
+                        break;
+                    }
+
+                case "diff":
+                    {
+                        string protein1 = null;
+                        string protein2 = null;
+
+                        foreach (string sequence in sequnces)
+                        {
+                            if (sequence == comParts[1]) protein1 = comParts[1];
+                            if (sequence == comParts[2]) protein1 = comParts[2];
+                        }
+
+                        int diff = 0;
+
+                        if (protein1 != null && protein2 != null)
+                        {
+                            diff = Diff(protein1, protein2);
+                            //
+                        }
+                        else
+                        {
+                            //
+                        }
+
+                        break;
+                    }
+
+                case "mode":
+                    {
+                        string protein = null;
+
+                        foreach(string sequence in sequnces)
+                        {
+                            if(sequence == comParts[1])
+                            {
+                                protein = comParts[1];
+                                break;
+                            }
+                        }
+
+                        if(protein != null)
+                        {
+                            Mode(protein);
+                            //
+                        }
+                        else
+                        {
+                            //
+                        }
+
+
+                        break;
+                    }
+
+            }
         }
     }
 
@@ -55,18 +146,18 @@ class Program
 
         DecodeProtein(text1);
         DecodeProtein(text2);
-        Console.WriteLine(search(text1, "SIIK") ? "FOUND" : "NOT FOUND");
-        Console.WriteLine("diff: " + diff(text1, text2));
-        (char prot, int count) result = mode(text2);
+        Console.WriteLine(Search(text1, "SIIK") ? "FOUND" : "NOT FOUND");
+        Console.WriteLine("diff: " + Diff(text1, text2));
+        (char prot, int count) result = Mode(text2);
         Console.WriteLine(result.prot + ":" + result.count);
     }
 
-    static bool search(string input, string desiredSequence)
+    static bool Search(string input, string desiredSequence)
     {
         return input.Contains(desiredSequence);
     }
 
-    static int diff(string firstProtein, string secondProtein)
+    static int Diff(string firstProtein, string secondProtein)
     {
         int diff = 0;
         for (int i = 0; i < Math.Min(firstProtein.Length, secondProtein.Length); i++)
@@ -80,7 +171,7 @@ class Program
         return diff;
     }
 
-    static (char prot, int count) mode(string input)
+    static (char prot, int count) Mode(string input)
     {
         int[] map = new int[26];
         foreach (char ch in input)
