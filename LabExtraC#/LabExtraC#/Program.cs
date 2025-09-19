@@ -8,6 +8,7 @@ class Program
 
         Matrix matrixA = CreateMatrix(1);
         Matrix matrixB = CreateMatrix(2);
+        Matrix matrixC = null;
 
         Console.WriteLine("\nМатрица A:");
         PrintMatrix(matrixA);
@@ -20,6 +21,7 @@ class Program
         {
             Console.WriteLine("Выберите действие с матрицами:");
             Console.WriteLine("""
+
                 1. Сложение матриц
                 2. Вычитание матриц
                 3. Умножение матриц
@@ -36,7 +38,40 @@ class Program
                 case 0:
                     exit = true;
                     break;
+                case 1:
+                    matrixC = MatrixSolver.MatrixAddition(matrixA, matrixB, false);
+                    Console.WriteLine("\nC = A + B:");
+                    PrintMatrix(matrixC);
+                    break;
+                case 2:
 
+                    Console.WriteLine("""
+                        Выберите:
+                        1. C = A - B
+                        2. C = B - A
+                        """);
+
+                    while (!exit) {
+                        switch (int.Parse(Console.ReadLine()))
+                        {
+                            default:
+                                Console.WriteLine("Введите цифру 1 или 2");
+                                break;
+                            case 1:
+                                exit = true;
+                                matrixC = MatrixSolver.MatrixAddition(matrixA, matrixB, true);
+                                Console.WriteLine("\nC = A - B:");
+                                break;
+                            case 2:
+                                exit = true;
+                                matrixC = MatrixSolver.MatrixAddition(matrixB, matrixA, true);
+                                Console.WriteLine("\nC = B - C:");
+                                break;
+                        }
+                    }
+                    exit = false;
+                    PrintMatrix(matrixC);
+                    break;
             }
         }
     }
@@ -58,10 +93,7 @@ class Program
             }
         }
 
-        Matrix matrix = new Matrix(n, m);
-        matrix.setMatrix(mat);
-
-        return matrix;
+        return new Matrix(n, m, mat);
     }
 
     static void PrintMatrix(Matrix matrix)

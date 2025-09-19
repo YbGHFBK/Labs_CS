@@ -8,6 +8,13 @@ public class Matrix
     public Matrix(int n, int m)
     {
         matrix = new float[n, m];
+
+        Console.WriteLine(n + " " + m);
+    }
+
+    public Matrix(int n, int m, float[,] matrix) : this(n, m)
+    {
+        this.matrix = matrix;
     }
 
     public void setMatrix(float[,] matrix)
@@ -18,6 +25,11 @@ public class Matrix
     public float[,] getMatrix()
     {
         return matrix;
+    }
+
+    public (int n, int m) getSize()
+    {
+        return (this.n, this.m);
     }
 
 }
