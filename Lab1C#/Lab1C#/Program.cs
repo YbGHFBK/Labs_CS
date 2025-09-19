@@ -241,7 +241,7 @@ class Program
 
     static string DecodeProtein(string protein)
     {
-
+        
         if (string.IsNullOrEmpty(protein)) return protein;
 
         StringBuilder sb = new StringBuilder(capacity: 20);
