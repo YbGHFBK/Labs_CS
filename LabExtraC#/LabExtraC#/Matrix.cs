@@ -7,9 +7,9 @@ public class Matrix
 
     public Matrix(int n, int m)
     {
+        this.n = n;
+        this.m = m;
         matrix = new float[n, m];
-
-        Console.WriteLine(n + " " + m);
     }
 
     public Matrix(int n, int m, float[,] matrix) : this(n, m)
