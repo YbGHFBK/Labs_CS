@@ -174,6 +174,41 @@ class Program
 
                     exit = false;
                     break;
+
+                case 5:
+                    Console.WriteLine("""
+
+                        Выберите какую матрицу изменить:
+                        1. A
+                        2. B
+                        """);
+
+                    while (!exit)
+                    {
+                        switch (int.Parse(Console.ReadLine()))
+                        {
+                            default:
+                                Console.WriteLine("Введите цифру 1 или 2");
+                                break;
+                            case 1:
+                                exit = true;
+                                EditMatrix(matrixA);
+
+                                PrintMatrix(matrixA);
+
+                                break;
+                            case 2:
+                                exit = true;
+                                EditMatrix(matrixB);
+
+                                PrintMatrix(matrixB);
+
+                                break;
+                        }
+                    }
+
+                    exit = false;
+                    break;
             }
         }
     }
@@ -196,6 +231,27 @@ class Program
         }
 
         return new Matrix(n, m, mat);
+    }
+
+    static void EditMatrix(Matrix matrix)
+    {
+        Console.WriteLine("Введите размер матрицы:");
+        int n = int.Parse(Console.ReadLine());
+        int m = int.Parse(Console.ReadLine());
+
+        float[,] mat = new float[n, m];
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < m; j++)
+            {
+                Console.WriteLine("Введите элемент [" + i + "][" + j + "]");
+                mat[i, j] = float.Parse(Console.ReadLine());
+            }
+        }
+
+        matrix.setSize(n, m);
+        matrix.setMatrix(mat);
     }
 
     static void PrintMatrix(Matrix matrix)

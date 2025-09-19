@@ -22,6 +22,12 @@ public class Matrix
         this.matrix = matrix;
     }
 
+    public void setSize(int n, int m)
+    {
+        this.n = n;
+        this.m = m;
+    }
+
     public float[,] getMatrix()
     {
         return matrix;
