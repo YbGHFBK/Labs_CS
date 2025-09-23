@@ -9,7 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="TextFiles\commands.txt" />
     <None Remove="TextFiles\sequences.txt" />
   </ItemGroup>
 

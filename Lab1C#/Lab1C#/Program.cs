@@ -16,16 +16,29 @@ class Program
         }
 
         string[] commands = ReadFile("TextFiles/commands.txt");
+        CheckFile(commands);
         string[] sequences = ReadFile("TextFiles/sequences.txt");
-
+        CheckFile(sequences, true);
 
         GiveCommands(commands, sequences);
     }
 
     static string[] ReadFile(string path)
     {
-        string[] text = File.ReadAllLines(path);
-        return text;
+        try
+        {
+            string[] text = File.ReadAllLines(path);
+            return text;
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine("Файл не найден\n");
+            throw;
+        }
+        catch (Exception ex)
+        {
+            throw;
+        }
     }
 
     static void AppendToFile(string path, string command, string result, bool doAppend = true)
@@ -66,7 +79,14 @@ class Program
         
         using (StreamWriter sw = new StreamWriter(path, doAppend))
         {
-            sw.WriteLine(sb.ToString());
+            try
+            {
+                sw.WriteLine(sb.ToString());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ошибка записи в файл:\n");
+            }
         }
     }
 
@@ -309,5 +329,39 @@ class Program
             sb.Append(prev, count);
 
         return sb.ToString();
+    }
+
+    static void CheckFile(string[] text, bool seq = false)
+    {
+        for (int i = 0; i < text.Length; i++)
+        {
+            string[] parts = text[i].Split('\t');
+
+            switch (parts[0])
+            {
+                default:
+                    if (seq)
+                    {
+                        if (parts.Length != 3) throw new FormatException("Invalid sequence format in line: " + (i+1));
+                    }
+                    else
+                    {
+                        throw new FormatException("No such command exists in line: " + (i + 1));
+                    }
+                    break;
+
+                case "search":
+                    if (parts.Length != 2) throw new FormatException("Invalid search command format in line: " + (i+1));
+                    break;
+
+                case "diff":
+                    if (parts.Length != 3) throw new FormatException("Invalid diff command format in line: " + (i+1));
+                    break;
+
+                case "mode":
+                    if (parts.Length != 2) throw new FormatException("Invalid mode command format in line: " + (i+1));
+                    break;
+            }
+        }
     }
 }
