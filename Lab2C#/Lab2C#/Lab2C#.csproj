@@ -3,9 +3,18 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net8.0</TargetFramework>
-    <RootNamespace>Lab2C_</RootNamespace>
+    <RootNamespace>Lab2C#</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="bin\debug\net8.0\textfiles\ChaseData.txt" />
+    <Content Include="bin\debug\net8.0\textfiles\PursuitLog.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="bin\Debug\net8.0\TextFiles\" />
+  </ItemGroup>
 
 </Project>
