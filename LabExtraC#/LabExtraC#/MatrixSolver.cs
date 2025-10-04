@@ -53,6 +53,26 @@ public static class MatrixSolver
         return new Matrix(n2, m1, mat3);
     }
 
+    public static void MatrixMultiplication(Matrix matrix1, float num)
+    {
+        int n = matrix1.getSize().n, m = matrix1.getSize().m;
+
+        float[,] mat1 = matrix1.getMatrix();
+        float[,] mat2 = new float[n, m];
+
+        for (int i = 0; i < n; i++)
+        {
+            for (int j = 0; j < m; j++)
+            {
+
+                mat2[i, j] = mat1[i, j] * num;
+
+            }
+        }
+
+        matrix1.setMatrix(mat2);
+    }
+
     public static Matrix MatrixTransposition(Matrix matrix1)
     {
         float[,] mat1 = matrix1.getMatrix();

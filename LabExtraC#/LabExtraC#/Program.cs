@@ -25,8 +25,9 @@ class Program
                 1. Сложение матриц
                 2. Вычитание матриц
                 3. Умножение матриц
-                4. Найти транспонированную матрицу
-                5. Изменить матрицу
+                4. Умножение матрицы на число
+                5. Найти транспонированную матрицу
+                6. Изменить матрицу
                 0. Закрыть программу
 
                 Ваш выбор: 
@@ -141,6 +142,55 @@ class Program
                 case 4:
                     Console.WriteLine("""
 
+                        Выберите какую матрицу умножить
+                        1. A
+                        2. B
+                        """);
+
+                    while (!exit)
+                    {
+                        switch (int.Parse(Console.ReadLine()))
+                        {
+                            default:
+                                Console.WriteLine("Введите цифру 1 или 2");
+                                break;
+                            case 1:
+                                {
+                                    exit = true;
+
+                                    float num = float.Parse(Console.ReadLine());
+
+                                    MatrixSolver.MatrixMultiplication(matrixA, num);
+
+                                    Console.WriteLine("\nA * " + num + ":");
+                                    PrintMatrix(matrixA);
+
+                                    break;
+                                }
+                            case 2:
+                                {
+                                    exit = true;
+
+                                    float num = float.Parse(Console.ReadLine());
+
+                                    MatrixSolver.MatrixMultiplication(matrixB, num);
+
+                                    Console.WriteLine("\nB * " + num + ":");
+                                    PrintMatrix(matrixB);
+                                    
+                                    break;
+                                }
+                        }
+                    }
+
+                    exit = false;
+
+                    break;
+
+
+                case 5:
+                    Console.WriteLine("""
+
                         Выберите какую матрицу транспонировать:
                         1. A
                         2. B
@@ -175,7 +225,7 @@ class Program
                     exit = false;
                     break;
 
-                case 5:
+                case 6:
                     Console.WriteLine("""
 
                         Выберите какую матрицу изменить:
