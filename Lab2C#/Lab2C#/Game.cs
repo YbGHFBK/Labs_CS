@@ -1,4 +1,6 @@
-﻿using System.Reflection.Metadata;
+﻿using System.IO;
+using System.Reflection.Metadata;
+using System.Text;
 
 enum GameState
 {
@@ -25,7 +27,8 @@ class Game
 
     public void Run(string[] text)
     {
-        
+        DoPrint(false, "Cat and Mouse\n\nCat\tMouse\tDistance\n" + new string('-', 20));
+
         int counter = 1;
 
         Draw(true);
@@ -56,6 +59,8 @@ class Game
             }
 
         }
+
+        DoPrint(true, new string('-', 20) + "\n\n\nDistance traveled:\tCat\tMouse\n\t\t\t\t\t" + cat.distanceTravelled + "\t" + mouse.distanceTravelled);
     }
 
     private void DoCommand(string command, int steps)
@@ -97,9 +102,26 @@ class Game
         return Math.Abs(cat.location - mouse.location);
     }
 
-    public void DoPrint()
+    public void DoPrint(bool doAppend = true, string text = null)
     {
-        //Console.WriteLine(cat.location + '\t' + mouse.location + '\t' + FindDistance());
+        StringBuilder sb = new StringBuilder();
+        if (text != null) sb.Append(text);
+        else
+        {
+            sb.Append(cat.location + "\t" + mouse.location + "\t\t" + FindDistance());
+        }
+
+        using (StreamWriter sw = new StreamWriter(outputFile, doAppend))
+        {
+            try
+            {
+                sw.WriteLine(sb.ToString());
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ошибка записи в файл:\n");
+            }
+        }
     }
 
     public void Draw(bool start = false)
