@@ -1,4 +1,6 @@
-﻿enum PlayerState
+﻿using System.Drawing;
+
+enum PlayerState
 {
     Winner,
     Looser,
@@ -24,7 +26,8 @@ class Player
     {
         if (state == PlayerState.InGame)
         {
-            location += steps;
+            if (!InBounds(location + steps)) MoveToCorner(steps);
+            else location += steps;
             distanceTravelled += Math.Abs(steps);
         }
         else if (state == PlayerState.NotInGame)
@@ -34,9 +37,15 @@ class Player
         }
     }
     
-    public void MoveToCorner(int rightCorner)
+    public void MoveToCorner(int steps)
     {
-        if (location <= 0) location = rightCorner;
-        else location = 1;
+        if (location + steps > Game.size) location = steps - (Game.size - location);
+        else location = Game.size - (Math.Abs(steps) - location);
+    }
+
+    private bool InBounds(int location)
+    {
+        if (location <= 0 || location > Game.size) return false;
+        return true;
     }
 }

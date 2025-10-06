@@ -6,7 +6,11 @@
         Game.inputFile = "TextFiles/ChaseData.txt";
         Game.outputFile = "TextFiles/PursuitLog.txt";
 
-        Game game = new Game(16);
-        game.Run();
+        string[] text = File.ReadAllLines(Game.inputFile);
+
+        Game.size = int.Parse(text[0]);
+
+        Game game = new Game();
+        game.Run(text);
     }
 }
