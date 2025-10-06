@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Reflection.Metadata;
-using System.Text;
+﻿using System.Text;
 
 enum GameState
 {
@@ -27,7 +25,7 @@ class Game
 
     public void Run(string[] text)
     {
-        DoPrint(false, "Cat and Mouse\n\nCat\tMouse\tDistance\n" + new string('-', 20));
+        DoPrint("Cat and Mouse\n\nCat\tMouse\tDistance\n" + new string('-', 20), false);
 
         int counter = 1;
 
@@ -58,9 +56,13 @@ class Game
                     break;
             }
 
+            if (counter == text.Length - 1) state = GameState.End;
+
         }
 
-        DoPrint(true, new string('-', 20) + "\n\n\nDistance traveled:\tCat\tMouse\n\t\t\t\t\t" + cat.distanceTravelled + "\t" + mouse.distanceTravelled);
+        DoPrint(new string('-', 20) + "\n\n\nDistance traveled:\tCat\tMouse\n\t\t\t\t\t" + cat.distanceTravelled + "\t" + mouse.distanceTravelled);
+        if (cat.state == PlayerState.Winner) DoPrint("\nMouse caught at: " + mouse.location);
+        else DoPrint("\nMouse evaded Cat");
     }
 
     private void DoCommand(string command, int steps)
@@ -93,7 +95,12 @@ class Game
 
     private void GameCheck()
     {
-        if (mouse.location == cat.location) state = GameState.End;
+        if (mouse.location == cat.location)
+        {
+            cat.state = PlayerState.Winner;
+            mouse.state = PlayerState.Looser;
+            state = GameState.End;
+        }
     }
 
     private int FindDistance()
@@ -102,7 +109,7 @@ class Game
         return Math.Abs(cat.location - mouse.location);
     }
 
-    public void DoPrint(bool doAppend = true, string text = null)
+    public void DoPrint(string text = null, bool doAppend = true)
     {
         StringBuilder sb = new StringBuilder();
         if (text != null) sb.Append(text);
