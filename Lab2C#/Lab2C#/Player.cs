@@ -48,4 +48,10 @@ class Player
         if (location <= 0 || location > Game.size) return false;
         return true;
     }
+
+    public string GetLocation()
+    {
+        if (location != -1) return location.ToString();
+        return "??";
+    }
 }

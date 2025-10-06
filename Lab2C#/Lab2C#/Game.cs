@@ -115,7 +115,7 @@ class Game
         if (text != null) sb.Append(text);
         else
         {
-            sb.Append(cat.location + "\t" + mouse.location + "\t\t" + FindDistance());
+            sb.Append(cat.GetLocation() + "\t" + mouse.GetLocation() + "\t\t" + FindDistance());
         }
 
         using (StreamWriter sw = new StreamWriter(outputFile, doAppend))
