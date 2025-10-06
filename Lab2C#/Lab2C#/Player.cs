@@ -15,6 +15,7 @@ class Player
 
     public Player(string name)
     {
+        state = PlayerState.NotInGame;
         this.name = name;
         this.location = -1;
     }
@@ -26,7 +27,11 @@ class Player
             location += steps;
             distanceTravelled += Math.Abs(steps);
         }
-        else if(state == PlayerState.NotInGame) location = steps;
+        else if (state == PlayerState.NotInGame)
+        {
+            location = steps;
+            state = PlayerState.InGame;
+        }
     }
     
     public void MoveToCorner(int rightCorner)
