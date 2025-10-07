@@ -43,7 +43,7 @@ class Player
         else location = Game.size - (Math.Abs(steps) - location);
     }
 
-    private bool InBounds(int location)
+    public bool InBounds(int location)
     {
         if (location <= 0 || location > Game.size) return false;
         return true;

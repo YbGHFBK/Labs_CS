@@ -35,14 +35,15 @@
 
     static void CheckFile(string[] text)
     {
-        for (int i = 0; i < text.Length; i++)
+        if (text.Length == 0 || !int.TryParse(text[0], out _)) throw new FormatException("First line must contain board size");
+
+        for (int i = 1; i < text.Length; i++)
         {
             string[] parts = text[i].Split('\t');
 
             switch (parts[0])
             {
                 default:
-                    if(i!=0) throw new FormatException("No such command exists in line: " + (i + 1));
                     break;
 
                 case "M":

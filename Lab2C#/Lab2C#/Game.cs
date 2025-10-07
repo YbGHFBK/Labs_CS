@@ -77,12 +77,6 @@ class Game
         Console.WriteLine(cat.location + "\t" + mouse.location + "\t" + FindDistance());
     }
 
-    private bool InBounds(int location)
-    {
-        if(location <= 0 || location > size) return false;
-        return true;
-    }
-
     private void GameCheck()
     {
         if (mouse.location == cat.location)
@@ -95,7 +89,7 @@ class Game
 
     private int FindDistance()
     {
-        if (!InBounds(mouse.location) || !InBounds(cat.location)) return -1; 
+        if (!mouse.InBounds(mouse.location) || !cat.InBounds(cat.location)) return -1;
         return Math.Abs(cat.location - mouse.location);
     }
 
