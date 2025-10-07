@@ -38,13 +38,13 @@ class Game
             switch (parts[0])
             {
                 case "M":
-                    DoCommand("M", int.Parse(parts[1]));
+                    DoCommand(mouse, int.Parse(parts[1]));
                     GameCheck();
                     break;
 
                 case "C":
 
-                    DoCommand("C", int.Parse(parts[1]));
+                    DoCommand(cat, int.Parse(parts[1]));
                     GameCheck();
                     break;
 
@@ -65,26 +65,12 @@ class Game
         else DoPrint("\nMouse evaded Cat");
     }
 
-    private void DoCommand(string command, int steps)
+    private void DoCommand(Player player, int steps)
     {
-        switch(command)
-        {
-            case "M":
-                mouse.Move(steps);
+        player.Move(steps);
 
-                Draw();
-                Console.WriteLine(cat.location + "\t" + mouse.location + "\t" + FindDistance() );
-
-                break;
-
-            case "C":
-                cat.Move(steps);
-
-                Draw();
-                Console.WriteLine(cat.location + "\t" + mouse.location + "\t" + FindDistance() );
-
-                break;
-        }
+        Draw();
+        Console.WriteLine(cat.location + "\t" + mouse.location + "\t" + FindDistance());
     }
 
     private bool InBounds(int location)

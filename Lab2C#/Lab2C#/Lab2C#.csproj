@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <Content Include="bin\debug\net8.0\textfiles\ChaseData.txt" />
+    <Content Include="bin\debug\net8.0\textfiles\logs.txt" />
     <Content Include="bin\debug\net8.0\textfiles\PursuitLog.txt" />
   </ItemGroup>
 
