@@ -16,6 +16,8 @@ class Game
     public Player mouse;
     public GameState state;
 
+    private StringBuilder sb = new StringBuilder();
+
     public Game()
     {
         cat = new Player("Cat");
@@ -25,7 +27,7 @@ class Game
 
     public void Run(string[] text)
     {
-        DoPrint("Cat and Mouse\n\nCat\tMouse\tDistance\n" + new string('-', 20), false);
+        SbAppend("Cat and Mouse\n\nCat\tMouse\tDistance\n" + new string('-', 20) + "\n");
 
         int counter = 1;
 
@@ -49,7 +51,7 @@ class Game
                     break;
 
                 case "P":
-                    DoPrint();
+                    SbAppend();
                     break;
 
                 default:
@@ -60,9 +62,11 @@ class Game
 
         }
 
-        DoPrint(new string('-', 20) + "\n\n\nDistance traveled:\tCat\tMouse\n\t\t\t\t\t" + cat.distanceTravelled + "\t" + mouse.distanceTravelled);
-        if (cat.state == PlayerState.Winner) DoPrint("\nMouse caught at: " + mouse.location);
-        else DoPrint("\nMouse evaded Cat");
+        SbAppend(new string('-', 20) + "\n\n\nDistance traveled:\tCat\tMouse\n\t\t\t\t\t" + cat.distanceTravelled + "\t" + mouse.distanceTravelled);
+        if (cat.state == PlayerState.Winner) SbAppend("\nMouse caught at: " + mouse.location);
+        else SbAppend("\nMouse evaded Cat");
+
+        DoPrint();
     }
 
     private void DoCommand(Player player, int steps)
@@ -95,16 +99,18 @@ class Game
         return Math.Abs(cat.location - mouse.location);
     }
 
-    public void DoPrint(string text = null, bool doAppend = true)
+    public void SbAppend(string text = null)
     {
-        StringBuilder sb = new StringBuilder();
         if (text != null) sb.Append(text);
         else
         {
-            sb.Append(cat.GetLocation() + "\t" + mouse.GetLocation() + "\t\t" + FindDistance());
+            sb.Append(cat.GetLocation() + "\t" + mouse.GetLocation() + "\t\t" + FindDistance() + "\n");
         }
+    }
 
-        using (StreamWriter sw = new StreamWriter(outputFile, doAppend))
+    private void DoPrint()
+    {
+        using (StreamWriter sw = new StreamWriter(outputFile, false))
         {
             try
             {
@@ -113,6 +119,7 @@ class Game
             catch (Exception ex)
             {
                 Console.WriteLine("Ошибка записи в файл:\n");
+                throw;
             }
         }
     }
