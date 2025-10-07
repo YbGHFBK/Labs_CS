@@ -13,13 +13,16 @@
 
         Game game = new Game();
         game.Run(text);
+
     }
 
     static string[] ReadFile(string path)
     {
         try
         {
-            string[] text = File.ReadAllLines(path);
+            string[] text = File.ReadAllLines(path)
+                                .Where(line => !string.IsNullOrEmpty(line))
+                                .ToArray();
             return text;
         }
         catch (IOException ex)

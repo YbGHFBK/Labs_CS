@@ -24,7 +24,6 @@ class Game
         mouse = new Player("Mouse");
         state = GameState.Start;
     }
-
     public void Run(string[] text)
     {
         SbAppend("Cat and Mouse\n\nCat\tMouse\tDistance\n" + new string('-', 20) + "\n");
@@ -41,13 +40,13 @@ class Game
             {
                 case "M":
                     DoCommand(mouse, int.Parse(parts[1]));
-                    GameCheck();
+                    GameCheck(text[counter]);
                     break;
 
                 case "C":
 
                     DoCommand(cat, int.Parse(parts[1]));
-                    GameCheck();
+                    GameCheck(text[counter]);
                     break;
 
                 case "P":
@@ -58,13 +57,18 @@ class Game
                     break;
             }
 
-            if (counter == text.Length - 1) state = GameState.End;
+            if (counter == text.Length) state = GameState.End;
 
         }
 
         SbAppend(new string('-', 20) + "\n\n\nDistance traveled:\tCat\tMouse\n\t\t\t\t\t" + cat.distanceTravelled + "\t" + mouse.distanceTravelled);
         if (cat.state == PlayerState.Winner) SbAppend("\nMouse caught at: " + mouse.location);
-        else SbAppend("\nMouse evaded Cat");
+        else
+        {
+            cat.state = PlayerState.Looser;
+            mouse.state = PlayerState.Winner;
+            SbAppend("\nMouse evaded Cat");
+        }
 
         DoPrint();
     }
@@ -77,10 +81,11 @@ class Game
         Console.WriteLine(cat.location + "\t" + mouse.location + "\t" + FindDistance());
     }
 
-    private void GameCheck()
-    {
+    private void GameCheck(string nextCommand)
+    { 
         if (mouse.location == cat.location)
         {
+            if (nextCommand == "P") SbAppend();
             cat.state = PlayerState.Winner;
             mouse.state = PlayerState.Looser;
             state = GameState.End;

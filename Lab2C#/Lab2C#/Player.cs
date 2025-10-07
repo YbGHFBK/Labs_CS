@@ -39,8 +39,11 @@ class Player
     
     public void MoveToCorner(int steps)
     {
+        double count = steps / Game.size;
+        steps = steps - ( (int)Math.Floor(count) * Game.size );
         if (location + steps > Game.size) location = steps - (Game.size - location);
-        else location = Game.size - (Math.Abs(steps) - location);
+        else if (location + steps <= 0) location = Game.size - (Math.Abs(steps) - location);
+        else Move(steps);
     }
 
     public bool InBounds(int location)
