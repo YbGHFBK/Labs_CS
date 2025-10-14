@@ -1,4 +1,4 @@
-﻿class Text
+﻿class Text : Token
 {
     public List<Sentence> sentences;
     int quantity;

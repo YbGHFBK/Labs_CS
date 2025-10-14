@@ -6,6 +6,8 @@
         Game.inputFile = "TextFiles/ChaseData.txt";
         Game.outputFile = "TextFiles/PursuitLog.txt";
 
+        File.Create("Test.txt", FileOptions );
+
         string[] text = ReadFile(Game.inputFile);
         CheckFile(text);
 
@@ -23,6 +25,7 @@
             string[] text = File.ReadAllLines(path)
                                 .Where(line => !string.IsNullOrEmpty(line))
                                 .ToArray();
+            
             return text;
         }
         catch (IOException ex)

@@ -1,4 +1,4 @@
-﻿class Punctuation
+﻿class Punctuation : Token
 {
     char ch;
 

@@ -1,4 +1,4 @@
-﻿class Word
+﻿class Word : Token
 {
     public string letters;
 

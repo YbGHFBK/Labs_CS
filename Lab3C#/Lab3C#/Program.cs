@@ -1,11 +1,11 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Text.RegularExpressions;
 
 class Program
 {
     static void Main(string[] args)
     {
-        Console.OutputEncoding = Encoding.UTF8;
 
         string inputFile = "TextFiles/Text.txt";
         string stopWordsEn = "TextFiles/StopWordsEn.txt";
@@ -17,61 +17,68 @@ class Program
 
         ParseText(str, text);
 
-        PrintParseResult(text);
+        PrintParsingResult(text);
 
-        //while (true)
-        //{
-        //    Console.WriteLine("""
-        //        1. Вывести все предложения заданного текста в порядке возрастания количества слов в предложениях
-        //        2. Вывести все предложения заданного текста в порядке возрастания длины предложения
-        //        3. Во всех вопросительных предложениях текста найти слова заданной длины
-        //        4. Удалить из текста все слова заданной длины, начинающиеся с согласной буквы
-        //        5. В некотором предложении текста заменить слова заданной длины на указанную подстроку, длина которой может не совпадать с длиной слова
-        //        6. Удалить стоп-слова
-        //        7. Экспортировать текстовый объект в XML-документ
-        //        0. Выход
-        //        """);
+        bool exit = false;
 
-        //    byte choice = byte.Parse(Console.ReadLine());
+        while (!exit)
+        {
+            Console.Write("""
+                1. Вывести все предложения заданного текста в порядке возрастания количества слов в предложениях
+                2. Вывести все предложения заданного текста в порядке возрастания длины предложения
+                3. Во всех вопросительных предложениях текста найти слова заданной длины
+                4. Удалить из текста все слова заданной длины, начинающиеся с согласной буквы
+                5. В некотором предложении текста заменить слова заданной длины на указанную подстроку, длина которой может не совпадать с длиной слова
+                6. Удалить стоп-слова
+                7. Экспортировать текстовый объект в XML-документ
+                0. Выход
 
-        //    switch(choice)
-        //    {
-        //        case 1:
-        //            break;
+                Выберите: 
+                """);
 
-        //        case 2:
-        //            break;
+            byte choice = byte.Parse(Console.ReadLine());
 
-        //        case 3:
-        //            break;
+            switch (choice)
+            {
+                case 1:
+                    break;
 
-        //        case 4:
-        //            break;
+                case 2:
+                    break;
 
-        //        case 6:
-        //            break;
+                case 3:
+                    break;
 
-        //        case 7:
-        //            break;
+                case 4:
+                    break;
 
-        //        case 0:
-        //            break;
-        //    }
-        //}
+                case 6:
+                    break;
+
+                case 7:
+                    break;
+
+                case 0:
+                    exit = true;
+                    break;
+            }
+        }
     }
 
     static string ReadFile(string path)
     {
         try
         {
-            return File.ReadAllText(path, Encoding.UTF8);
+            string text = File.ReadAllText(path);
+
+            return text;
         }
         catch (IOException ex)
         {
             Console.WriteLine("Файл не найден\n");
             throw;
         }
-        catch (Exception ex)
+        catch (Exception ex)  //finaly
         {
             throw;
         }
@@ -87,14 +94,14 @@ class Program
         {
             if (IsEnglishOrRussianLetter(c, sb).Item1)
             {
-                isRu = IsEnglishOrRussianLetter(c, sb).Item2;
-                break;
+                //isRu = IsEnglishOrRussianLetter(c, sb).Item2;
+                continue;
             }
 
             if (char.IsWhiteSpace(c))
             {
                 MakeWord(sb, sentence);
-                break;
+                continue;
             }
 
             switch (IsPunctuation(c))
@@ -116,15 +123,15 @@ class Program
 
     static (bool, bool) IsEnglishOrRussianLetter(char c, StringBuilder sb)
     {
-        if (Regex.IsMatch(c.ToString(), "[а-яА-ЯёЁ]"))
+        if (Regex.IsMatch(c.ToString(), "[а-яА-ЯёЁ]")) /////////////////////////////////////////////////////
         {
-            sb.Append('c');
+            sb.Append(c);
             return (true, true);
         }
 
         if (Regex.IsMatch(c.ToString(), "[a-zA-Z]"))
         {
-            sb.Append('c');
+            sb.Append(c);
             return (true, false);
         }
 
@@ -160,12 +167,14 @@ class Program
         text.AddSentence(sentence);
     }
 
-    static void PrintParseResult(Text text)
+    static void PrintParsingResult(Text text)
     {
         foreach (Sentence sentence in text.sentences)
-            foreach(Word word in sentence.words)
+            foreach (Word word in sentence.words)
             {
                 Console.Write(word.letters + " ");
             }
+
+        //Console.WriteLine(text.sentences[0].words[0].letters);
     }
 }
