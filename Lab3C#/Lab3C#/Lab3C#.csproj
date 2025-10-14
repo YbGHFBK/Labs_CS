@@ -8,4 +8,10 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Content Include="bin\debug\net8.0\texstfiles\StopWordsEn.txt" />
+    <Content Include="bin\debug\net8.0\texstfiles\StopWordsRu.txt" />
+    <Content Include="bin\debug\net8.0\texstfiles\Text.txt" />
+  </ItemGroup>
+
 </Project>
