@@ -5,6 +5,8 @@ class Program
 {
     static void Main(string[] args)
     {
+        Console.OutputEncoding = Encoding.UTF8;
+
         string inputFile = "TextFiles/Text.txt";
         string stopWordsEn = "TextFiles/StopWordsEn.txt";
         string stopWordsRu = "TextFiles/StopWordsRu.txt";
@@ -15,52 +17,54 @@ class Program
 
         ParseText(str, text);
 
-        while (true)
-        {
-            Console.WriteLine("""
-                1. Вывести все предложения заданного текста в порядке возрастания количества слов в предложениях
-                2. Вывести все предложения заданного текста в порядке возрастания длины предложения
-                3. Во всех вопросительных предложениях текста найти слова заданной длины
-                4. Удалить из текста все слова заданной длины, начинающиеся с согласной буквы
-                5. В некотором предложении текста заменить слова заданной длины на указанную подстроку, длина которой может не совпадать с длиной слова
-                6. Удалить стоп-слова
-                7. Экспортировать текстовый объект в XML-документ
-                0. Выход
-                """);
+        PrintParseResult(text);
 
-            byte choice = byte.Parse(Console.ReadLine());
+        //while (true)
+        //{
+        //    Console.WriteLine("""
+        //        1. Вывести все предложения заданного текста в порядке возрастания количества слов в предложениях
+        //        2. Вывести все предложения заданного текста в порядке возрастания длины предложения
+        //        3. Во всех вопросительных предложениях текста найти слова заданной длины
+        //        4. Удалить из текста все слова заданной длины, начинающиеся с согласной буквы
+        //        5. В некотором предложении текста заменить слова заданной длины на указанную подстроку, длина которой может не совпадать с длиной слова
+        //        6. Удалить стоп-слова
+        //        7. Экспортировать текстовый объект в XML-документ
+        //        0. Выход
+        //        """);
 
-            switch(choice)
-            {
-                case 1:
-                    break;
+        //    byte choice = byte.Parse(Console.ReadLine());
 
-                case 2:
-                    break;
+        //    switch(choice)
+        //    {
+        //        case 1:
+        //            break;
 
-                case 3:
-                    break;
+        //        case 2:
+        //            break;
 
-                case 4:
-                    break;
+        //        case 3:
+        //            break;
 
-                case 6:
-                    break;
+        //        case 4:
+        //            break;
 
-                case 7:
-                    break;
+        //        case 6:
+        //            break;
 
-                case 0:
-                    break;
-            }
-        }
+        //        case 7:
+        //            break;
+
+        //        case 0:
+        //            break;
+        //    }
+        //}
     }
 
     static string ReadFile(string path)
     {
         try
         {
-            return File.ReadAllText(path);
+            return File.ReadAllText(path, Encoding.UTF8);
         }
         catch (IOException ex)
         {
@@ -145,7 +149,7 @@ class Program
     {
         if(sb.Length != 0)
         {
-            Word word = new Word(sb.ToString().ToCharArray());
+            Word word = new Word(sb.ToString());
             sentence.AddWord(word);
             sb.Clear();
         }
@@ -154,5 +158,14 @@ class Program
     static void MakeSentence(Text text, Sentence sentence)
     {
         text.AddSentence(sentence);
+    }
+
+    static void PrintParseResult(Text text)
+    {
+        foreach (Sentence sentence in text.sentences)
+            foreach(Word word in sentence.words)
+            {
+                Console.Write(word.letters + " ");
+            }
     }
 }

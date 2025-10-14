@@ -1,16 +1,16 @@
 ﻿class Text
 {
-    List<Sentence> text;
+    public List<Sentence> sentences;
     int quantity;
 
     public Text()
     {
-        text = new List<Sentence>();
+        sentences = new List<Sentence>();
         quantity = 0;
     }
 
     public void AddSentence(Sentence sentence)
     {
-        text.Add(sentence);
+        sentences.Add(sentence);
     }
 }

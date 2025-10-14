@@ -1,6 +1,6 @@
 ﻿class Sentence
 {
-    List<Word> words;
+    public List<Word> words;
 
     public Sentence()
     {

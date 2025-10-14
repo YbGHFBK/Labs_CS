@@ -1,8 +1,8 @@
 ﻿class Word
 {
-    char[] letters;
+    public string letters;
 
-    public Word(char[] letters)
+    public Word(string letters)
     {
         this.letters = letters;
     }
