@@ -1,4 +1,4 @@
-﻿class Sentence : Token
+﻿public class Sentence : Token
 {
     public List<Word> words;
 
