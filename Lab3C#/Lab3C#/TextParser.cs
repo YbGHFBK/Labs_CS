@@ -13,11 +13,15 @@ public static class TextParser
 
         foreach (char c in str)
         {
-            var (isLetter, isRussian) = IsEnglishOrRussianLetter(c, sb);
-            if (isLetter)
+            if (sb.Length == 0)
             {
-                isRu = isRussian;
-                continue;
+                var (isLetter, isRussian) = IsEnglishOrRussianLetter(c, sb);
+                if (isLetter)
+                {
+                    sb.Append(c);
+                    isRu = isRussian;
+                    continue;
+                }
             }
 
             if (char.IsWhiteSpace(c))
@@ -33,6 +37,7 @@ public static class TextParser
                     continue;
 
                 case 2:
+                    MakeWord(sb, sentence);
                     MakeSentence(sentences, sentence);
                     sentence = new Sentence();
                     continue;
@@ -40,6 +45,8 @@ public static class TextParser
                 case 0:
                     break;
             }
+
+            sb.Append(c);
         }
         return new Text(sentences);
     }
@@ -48,13 +55,11 @@ public static class TextParser
     {
         if (Regex.IsMatch(c.ToString(), "[а-яА-ЯёЁ]"))
         {
-            sb.Append(c);
             return (true, true);
         }
 
         if (Regex.IsMatch(c.ToString(), "[a-zA-Z]"))
         {
-            sb.Append(c);
             return (true, false);
         }
 
@@ -63,7 +68,7 @@ public static class TextParser
 
     static byte IsPunctuation(char c)
     {
-        string WordPunctuation = ",;:\"'-()[]{}";
+        string WordPunctuation = ",;:\"'-—()[]{}";
         string SentencePunctuation = ".!?";
 
         if (WordPunctuation.Contains(c))
@@ -77,6 +82,7 @@ public static class TextParser
 
     static void MakeWord(StringBuilder sb, Sentence sentence)
     {
+        Console.WriteLine(sb.ToString());
         if (sb.Length != 0)
         {
             Word word = new Word(sb.ToString());
