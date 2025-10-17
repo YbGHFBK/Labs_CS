@@ -6,4 +6,9 @@
     {
         this.ch = ch;
     }
+
+    public override string ToString()
+    {
+        return ch.ToString();
+    }
 }

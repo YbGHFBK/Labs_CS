@@ -6,4 +6,9 @@
     {
         this.letters = letters;
     }
+
+    public override string ToString()
+    {
+        return letters;
+    }
 }

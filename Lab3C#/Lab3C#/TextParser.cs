@@ -34,10 +34,12 @@ public static class TextParser
             {
                 case 1:
                     MakeWord(sb, sentence);
+                    MakePunctuation(c, sentence);
                     continue;
 
                 case 2:
                     MakeWord(sb, sentence);
+                    MakePunctuation(c, sentence);
                     MakeSentence(sentences, sentence);
                     sentence = new Sentence();
                     continue;
@@ -82,13 +84,19 @@ public static class TextParser
 
     static void MakeWord(StringBuilder sb, Sentence sentence)
     {
-        Console.WriteLine(sb.ToString());
         if (sb.Length != 0)
         {
             Word word = new Word(sb.ToString());
-            sentence.AddWord(word);
+            //Console.WriteLine(word.letters + " " + sb.Length);
+            sentence.AddWordOrPunctuation(word);
             sb.Clear();
         }
+    }
+
+    static void MakePunctuation(char c, Sentence sentence)
+    {
+        Punctuation punc = new Punctuation(c);
+        sentence.AddWordOrPunctuation(punc);
     }
 
     static void MakeSentence(List<Sentence> sentences, Sentence sentence)

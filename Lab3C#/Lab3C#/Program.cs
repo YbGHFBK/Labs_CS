@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -15,9 +16,9 @@ class Program
 
         string str = ReadFile(inputFile);
 
-        TextParser.ParseText(str);
+        text = TextParser.ParseText(str);
 
-        PrintParsingResult(text);
+        //PrintParsingResult(text);
 
         bool exit = false;
 
@@ -41,6 +42,7 @@ class Program
             switch (choice)
             {
                 case 1:
+                    PrintSentences(SortByWordsCount(text.sentences));
                     break;
 
                 case 2:
@@ -70,7 +72,6 @@ class Program
         try
         {
             string text = File.ReadAllText(path);
-            Console.WriteLine(text[8]);
             return text;
         }
         catch (IOException ex)
@@ -82,17 +83,53 @@ class Program
 
     static void PrintParsingResult(Text text)
     {
-        Console.WriteLine("<text>\n");
+        Console.Write("<text>\n");
         foreach (Sentence sentence in text.sentences)
         {
-            Console.WriteLine("\t<sentence>\n");
+            Console.Write("\t<sentence>\n");
             foreach (Word word in sentence.words)
             {
                 Console.Write("\t\t<word>" + word.letters + "</word>\n");
             }
-            Console.WriteLine("\t</sentence>\n");
+            Console.Write("\t</sentence>\n");
         }
 
         Console.WriteLine("</text>");
+    }
+
+    static void PrintSentences(Text text)
+    {
+        foreach(Sentence sentence in text.sentences)
+        {
+            foreach (Token token in sentence.words)
+            {
+                Console.Write(token.ToString() + " ");
+            }
+            Console.WriteLine(" " + sentence.WordsCount());
+        }
+    }
+
+    static Text SortByWordsCount(List<Sentence> sentences)
+    {
+        List<Sentence> sortedSentences = new List<Sentence>(sentences);
+
+        for (int i = 0; i < sortedSentences.Count - 1; i++)
+        {
+            int minInd = i;
+            for (int j = i + 1; j < sortedSentences.Count; j++)
+            {
+                
+                if (sortedSentences[j].WordsCount() < sortedSentences[minInd].WordsCount())
+                {
+                    minInd = j;
+                }
+            }
+
+            Sentence temp = sortedSentences[minInd];
+            sortedSentences[minInd] = sortedSentences[i];
+            sortedSentences[i] = temp;
+        }
+
+        return new Text(sortedSentences);
     }
 }
