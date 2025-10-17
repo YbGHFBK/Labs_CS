@@ -25,6 +25,8 @@ class Program
         while (!exit)
         {
             Console.Write("""
+                
+                Выберите пункт меню:
                 1. Вывести все предложения заданного текста в порядке возрастания количества слов в предложениях
                 2. Вывести все предложения заданного текста в порядке возрастания длины предложения
                 3. Во всех вопросительных предложениях текста найти слова заданной длины
@@ -34,7 +36,7 @@ class Program
                 7. Экспортировать текстовый объект в XML-документ
                 0. Выход
 
-                Выберите: 
+                Ваш выбор:
                 """);
 
             byte choice = byte.Parse(Console.ReadLine());
@@ -42,10 +44,11 @@ class Program
             switch (choice)
             {
                 case 1:
-                    PrintSentences(SortByWordsCount(text.sentences));
+                    PrintSentences(text.GetSortedByWordsCount());
                     break;
 
                 case 2:
+                    PrintSentences(text.GetSortedBySentenceLength());
                     break;
 
                 case 3:
@@ -71,7 +74,7 @@ class Program
     {
         try
         {
-            string text = File.ReadAllText(path);
+            string text  = File.ReadAllText(path);
             return text;
         }
         catch (IOException ex)
@@ -101,35 +104,25 @@ class Program
     {
         foreach(Sentence sentence in text.sentences)
         {
+            bool isLastWord = false;
             foreach (Token token in sentence.words)
             {
-                Console.Write(token.ToString() + " ");
-            }
-            Console.WriteLine(" " + sentence.WordsCount());
-        }
-    }
-
-    static Text SortByWordsCount(List<Sentence> sentences)
-    {
-        List<Sentence> sortedSentences = new List<Sentence>(sentences);
-
-        for (int i = 0; i < sortedSentences.Count - 1; i++)
-        {
-            int minInd = i;
-            for (int j = i + 1; j < sortedSentences.Count; j++)
-            {
-                
-                if (sortedSentences[j].WordsCount() < sortedSentences[minInd].WordsCount())
+                if (token is Word)
                 {
-                    minInd = j;
+                    if (isLastWord)
+                        Console.Write(" " + token.ToString());
+                    else
+                        Console.Write(token.ToString());
+                    isLastWord = true;
+                }
+                else if (token is Punctuation)
+                {
+                    isLastWord = false;
+                    Console.Write(token.ToString() + " ");
                 }
             }
-
-            Sentence temp = sortedSentences[minInd];
-            sortedSentences[minInd] = sortedSentences[i];
-            sortedSentences[i] = temp;
+            Console.WriteLine();
         }
-
-        return new Text(sortedSentences);
     }
+
 }
