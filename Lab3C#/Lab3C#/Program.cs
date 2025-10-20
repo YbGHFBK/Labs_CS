@@ -40,54 +40,70 @@ class Program
                 Ваш выбор: 
                 """);
 
-            byte choice = byte.Parse(Console.ReadLine());
-
-            switch (choice)
+            byte choice = 0;
+            while (true)
             {
-                case 1:
-                    PrintSentences(text.GetSortedByWordsCount());
-                    break;
+                try
+                {
+                    choice = byte.Parse(Console.ReadLine());
 
-                case 2:
-                    PrintSentences(text.GetSortedBySentenceLength());
-                    break;
+                    switch (choice)
+                        {
+                            case 1:
+                                PrintSentences(text.GetSortedByWordsCount());
+                                break;
 
-                case 3:
-                    Console.Write("Выберите длину слов, которые надо найти: ");
-                    PrintSentences(text.GetLengthWordsInQuestions(int.Parse(Console.ReadLine())));
-                    break;
+                            case 2:
+                                PrintSentences(text.GetSortedBySentenceLength());
+                                break;
 
-                case 4:
-                    Console.Write("Выберите длину: ");
-                    PrintSentences(text.RemoveLengthСonsonantWords(int.Parse(Console.ReadLine())));
-                    break;
+                            case 3:
+                                Console.Write("Выберите длину слов, которые надо найти: ");
+                                PrintSentences(text.GetLengthWordsInQuestions(int.Parse(Console.ReadLine())));
+                                break;
 
-                case 5:
-                    Console.Write("Введите номер предложения: ");
-                    int sentNum = int.Parse(Console.ReadLine());
-                    Console.Write("Введите длину: ");
-                    int len = int.Parse(Console.ReadLine());
-                    Console.Write("Введите подстроку: ");
-                    String line = Console.ReadLine();
+                            case 4:
+                                Console.Write("Выберите длину: ");
+                                PrintSentences(text.RemoveLengthСonsonantWords(int.Parse(Console.ReadLine())));
+                                break;
 
-                    PrintSentences(
-                        new Text
-                        ( new List<Sentence>
-                            { text.ReplaceSubstring(sentNum, len, line)
-                        }));
-                    break;
+                            case 5:
+                                Console.Write("Введите номер предложения: ");
+                                int sentNum = int.Parse(Console.ReadLine());
+                                Console.Write("Введите длину: ");
+                                int len = int.Parse(Console.ReadLine());
+                                Console.Write("Введите подстроку: ");
+                                String line = Console.ReadLine();
 
-                case 6:
-                    PrintSentences(text.RemoveStopWords(ReadFileLines(stopWordsRu)));
-                    break;
+                                PrintSentences(
+                                    new Text
+                                    (new List<Sentence>
+                                        { text.ReplaceSubstring(sentNum, len, line)
+                                    }));
+                                break;
 
-                case 7:
-                    XmlSerializerHelper.SerializeToFile(text, outputFile);
-                    break;
+                            case 6:
+                                PrintSentences(text.RemoveStopWords(ReadFileLines(stopWordsRu)));
+                                break;
 
-                case 0:
-                    exit = true;
-                    break;
+                            case 7:
+                                XmlSerializerHelper.SerializeToFile(text, outputFile);
+                                break;
+
+                            case 8:
+                                Console.WriteLine(XmlSerializerHelper.DeserializeFromFile1(outputFile));
+                                break;
+
+                            case 0:
+                                exit = true;
+                                break;
+                        }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.ToString());
+                }
+                break;
             }
         }
     }

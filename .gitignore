@@ -361,3 +361,4 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Lab3C#/Lab3C#/bin/Debug/net8.0/TextFiles/output.xml

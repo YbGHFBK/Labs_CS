@@ -1,4 +1,6 @@
-﻿class Program
+﻿using System.Runtime.InteropServices;
+
+class Program
 {
 
     static void Main(string[] args)
@@ -6,7 +8,8 @@
         Game.inputFile = "TextFiles/ChaseData.txt";
         Game.outputFile = "TextFiles/PursuitLog.txt";
 
-        File.Create("Test.txt", FileOptions );
+        File.Create("Test.txt");
+        File.SetAttributes("Test.txt", FileAttributes.ReadOnly);
 
         string[] text = ReadFile(Game.inputFile);
         CheckFile(text);
