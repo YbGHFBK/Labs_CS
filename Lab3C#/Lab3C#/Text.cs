@@ -116,4 +116,47 @@
 
         return new Text(newSentences);
     }
+
+    public Sentence ReplaceSubstring(int sent, int len, string substring)
+    {
+        Sentence sentence = new Sentence();
+
+        for(int i = 0; i < sentences[sent].words.Count; i++)
+        {
+            if (sentences[sent-1].words[i] is Word word && word.letters.Length == len)
+            {
+                sentence.AddWordOrPunctuation(new Word(substring));
+            }
+            else sentence.AddWordOrPunctuation(sentences[sent].words[i]);
+        }
+
+        return sentence;
+    }
+
+    public Text RemoveStopWords(string[] stopWords)
+    {
+        List<Sentence> newSentences = new List<Sentence>();
+
+        for(int i = 0; i < sentences.Count; i++)
+        {
+            Sentence newSentence = new Sentence();
+            for (int j = 0; j < sentences[i].words.Count; j++) {
+                bool isStopWord = false;
+                foreach (string stopWord in stopWords)
+                {
+                    if (sentences[i].words[j] is Word word && word.letters == stopWord)
+                    {
+                        isStopWord = true;
+                    }
+
+                    if (isStopWord) continue;
+                }
+                if(!isStopWord) newSentence.AddWordOrPunctuation(sentences[i].words[j]);
+            }
+
+            newSentences.Add(newSentence);
+        }
+
+        return new Text(newSentences);
+    }
 }

@@ -62,9 +62,22 @@ class Program
                     break;
 
                 case 5:
+                    Console.Write("Введите номер предложения: ");
+                    int sentNum = int.Parse(Console.ReadLine());
+                    Console.Write("Введите длину: ");
+                    int len = int.Parse(Console.ReadLine());
+                    Console.Write("Введите подстроку: ");
+                    String line = Console.ReadLine();
+
+                    PrintSentences(
+                        new Text
+                        ( new List<Sentence>
+                            { text.ReplaceSubstring(sentNum, len, line)
+                        }));
                     break;
 
                 case 6:
+                    PrintSentences(text.RemoveStopWords(ReadFileLines(stopWordsRu)));
                     break;
 
                 case 7:
@@ -82,6 +95,20 @@ class Program
         try
         {
             string text  = File.ReadAllText(path);
+            return text;
+        }
+        catch (IOException ex)
+        {
+            Console.WriteLine("Файл не найден\n");
+            throw;
+        }
+    }
+
+    static string[] ReadFileLines(string path)
+    {
+        try
+        {
+            string[] text = File.ReadAllLines(path);
             return text;
         }
         catch (IOException ex)
