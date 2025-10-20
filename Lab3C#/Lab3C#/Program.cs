@@ -11,6 +11,7 @@ class Program
         string inputFile = "TextFiles/Text.txt";
         string stopWordsEn = "TextFiles/StopWordsEn.txt";
         string stopWordsRu = "TextFiles/StopWordsRu.txt";
+        string outputFile = "TextFiles/output.xml";
 
         Text text = new Text();
 
@@ -81,6 +82,7 @@ class Program
                     break;
 
                 case 7:
+                    XmlSerializerHelper.SerializeToFile(text, outputFile);
                     break;
 
                 case 0:
@@ -121,12 +123,12 @@ class Program
     static void PrintParsingResult(Text text)
     {
         Console.Write("<text>\n");
-        foreach (Sentence sentence in text.sentences)
+        foreach (Sentence sentence in text.Sentences)
         {
             Console.Write("\t<sentence>\n");
-            foreach (Word word in sentence.words)
+            foreach (Word word in sentence.Words)
             {
-                Console.Write("\t\t<word>" + word.letters + "</word>\n");
+                Console.Write("\t\t<word>" + word.Letters + "</word>\n");
             }
             Console.Write("\t</sentence>\n");
         }
@@ -136,10 +138,10 @@ class Program
 
     static void PrintSentences(Text text)
     {
-        foreach(Sentence sentence in text.sentences)
+        foreach(Sentence sentence in text.Sentences)
         {
             bool isLastWord = false;
-            foreach (Token token in sentence.words)
+            foreach (Token token in sentence.Words)
             {
                 if (token is Word)
                 {

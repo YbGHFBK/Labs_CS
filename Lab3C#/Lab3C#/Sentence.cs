@@ -1,21 +1,26 @@
-﻿public class Sentence : Token
+﻿using System.Xml.Serialization;
+
+[XmlRoot("Sentence")]
+public class Sentence : Token
 {
-    public List<Token> words;
+    [XmlElement("Word", typeof(Word))]
+    [XmlElement("Punctuation", typeof(Punctuation))]
+    public List<Token> Words { get; set; } = new List<Token>();
 
     public Sentence()
     {
-        words = new List<Token>();
+        Words = new List<Token>();
     }
 
     public void AddWordOrPunctuation(Token token)
     {
-        words.Add(token);
+        Words.Add(token);
     }
 
     public int GetWordsCount()
     {
         int count = 0;
-        foreach (Token token in words)
+        foreach (Token token in Words)
         {
             if (token is Word) count++;
         }
@@ -26,10 +31,10 @@
     public int GetSentenceLength()
     {
         int count = 0;
-        foreach (Token token in words)
+        foreach (Token token in Words)
         {
             if (token is Punctuation) count++;
-            else if (token is Word word) count += word.letters.Length;
+            else if (token is Word word) count += word.Letters.Length;
         }
 
         count += GetWordsCount() - 1;

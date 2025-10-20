@@ -1,7 +1,9 @@
-﻿public class Token
+﻿using System.Xml.Serialization;
+
+[XmlInclude(typeof(Word))]
+[XmlInclude(typeof(Punctuation))]
+[XmlInclude(typeof(Sentence))]
+public class Token
 {
-    public virtual string ToString()
-    {
-        return null;
-    }
+    public override string ToString() => base.ToString();
 }

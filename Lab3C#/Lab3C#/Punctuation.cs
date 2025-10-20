@@ -1,19 +1,25 @@
-﻿public class Punctuation : Token
-{
-    char ch;
+﻿using System.Xml.Serialization;
 
-    public Punctuation(char ch)
+[XmlRoot("Punctuation")]
+public class Punctuation : Token
+{
+    [XmlText]
+    public string Symbol { get; set; }
+
+    public Punctuation() { }
+    
+    public Punctuation(string ch)
     {
-        this.ch = ch;
+        Symbol = ch;
     }
 
     public override string ToString()
     {
-        return ch.ToString();
+        return Symbol.ToString();
     }
 
-    public char getChar()
+    public string getPunc()
     {
-        return ch;
+        return Symbol;
     }
 }

@@ -1,27 +1,28 @@
-﻿public class Text
+﻿using System.Xml.Serialization;
+
+[XmlRoot("Text")]
+public class Text
 {
-    public List<Sentence> sentences;
-    int quantity;
+    [XmlElement("Sentence")]
+    public List<Sentence> Sentences { get; set; } = new List<Sentence>();
 
     public Text()
     {
-        sentences = new List<Sentence>();
-        quantity = 0;
+        Sentences = new List<Sentence>();
     }
     public Text(List<Sentence> sentences)
     {
-        this.sentences = sentences;
-        quantity = 0;
+        this.Sentences = sentences;
     }
 
     public void AddSentence(Sentence sentence)
     {
-        sentences.Add(sentence);
+        Sentences.Add(sentence);
     }
 
     public Text GetSortedByWordsCount()
     {
-        List<Sentence> sortedSentences = new List<Sentence>(sentences);
+        List<Sentence> sortedSentences = new List<Sentence>(Sentences);
 
         for (int i = 0; i < sortedSentences.Count - 1; i++)
         {
@@ -45,7 +46,7 @@
 
     public Text GetSortedBySentenceLength()
     {
-        List<Sentence> sortedSentences = new List<Sentence>(sentences);
+        List<Sentence> sortedSentences = new List<Sentence>(Sentences);
 
         for (int i = 0; i < sortedSentences.Count - 1; i++)
         {
@@ -71,11 +72,11 @@
     {
         List<Sentence> newSentences = new List<Sentence>();
 
-        for(int i = 0; i < sentences.Count; i++)
+        for(int i = 0; i < Sentences.Count; i++)
         {
-            if (sentences[i].words[sentences[i].words.Count - 1] is Punctuation punc && punc.getChar() == '?')
+            if (Sentences[i].Words[Sentences[i].Words.Count - 1] is Punctuation punc && punc.getPunc() == "?")
             {
-                newSentences.Add(GetLengthWords(sentences[i], len));
+                newSentences.Add(GetLengthWords(Sentences[i], len));
             }
         }
 
@@ -86,9 +87,9 @@
     {
         Sentence newSentence = new Sentence();
 
-        foreach (Token token in sentence.words)
+        foreach (Token token in sentence.Words)
         {
-            if (token is Word word && word.letters.Length == len)
+            if (token is Word word && word.Letters.Length == len)
             {
                 newSentence.AddWordOrPunctuation(word);
             }
@@ -101,14 +102,14 @@
     {
         List<Sentence> newSentences = new List<Sentence>();
 
-        for(int i = 0; i < sentences.Count; i++)
+        for(int i = 0; i < Sentences.Count; i++)
         {
             Sentence sentence = new Sentence();
-            for(int j = 0; j < sentences[i].words.Count; j++)
+            for(int j = 0; j < Sentences[i].Words.Count; j++)
             {
-                if (!(sentences[i].words[j] is Word word && word.letters.Length == len && word.isStartsWithConsonant()))
+                if (!(Sentences[i].Words[j] is Word word && word.Letters.Length == len && word.isStartsWithConsonant()))
                 {
-                    sentence.AddWordOrPunctuation(sentences[i].words[j]);
+                    sentence.AddWordOrPunctuation(Sentences[i].Words[j]);
                 }
             }
             newSentences.Add(sentence);
@@ -121,13 +122,13 @@
     {
         Sentence sentence = new Sentence();
 
-        for(int i = 0; i < sentences[sent].words.Count; i++)
+        for(int i = 0; i < Sentences[sent-1].Words.Count; i++)
         {
-            if (sentences[sent-1].words[i] is Word word && word.letters.Length == len)
+            if (Sentences[sent-1].Words[i] is Word word && word.Letters.Length == len)
             {
                 sentence.AddWordOrPunctuation(new Word(substring));
             }
-            else sentence.AddWordOrPunctuation(sentences[sent].words[i]);
+            else sentence.AddWordOrPunctuation(Sentences[sent-1].Words[i]);
         }
 
         return sentence;
@@ -137,21 +138,21 @@
     {
         List<Sentence> newSentences = new List<Sentence>();
 
-        for(int i = 0; i < sentences.Count; i++)
+        for(int i = 0; i < Sentences.Count; i++)
         {
             Sentence newSentence = new Sentence();
-            for (int j = 0; j < sentences[i].words.Count; j++) {
+            for (int j = 0; j < Sentences[i].Words.Count; j++) {
                 bool isStopWord = false;
                 foreach (string stopWord in stopWords)
                 {
-                    if (sentences[i].words[j] is Word word && word.letters == stopWord)
+                    if (Sentences[i].Words[j] is Word word && word.Letters == stopWord)
                     {
                         isStopWord = true;
                     }
 
                     if (isStopWord) continue;
                 }
-                if(!isStopWord) newSentence.AddWordOrPunctuation(sentences[i].words[j]);
+                if(!isStopWord) newSentence.AddWordOrPunctuation(Sentences[i].Words[j]);
             }
 
             newSentences.Add(newSentence);
