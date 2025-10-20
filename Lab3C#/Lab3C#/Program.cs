@@ -36,7 +36,7 @@ class Program
                 7. Экспортировать текстовый объект в XML-документ
                 0. Выход
 
-                Ваш выбор:
+                Ваш выбор: 
                 """);
 
             byte choice = byte.Parse(Console.ReadLine());
@@ -52,9 +52,16 @@ class Program
                     break;
 
                 case 3:
+                    Console.Write("Выберите длину слов, которые надо найти: ");
+                    PrintSentences(text.GetLengthWordsInQuestions(int.Parse(Console.ReadLine())));
                     break;
 
                 case 4:
+                    Console.Write("Выберите длину: ");
+                    PrintSentences(text.RemoveLengthСonsonantWords(int.Parse(Console.ReadLine())));
+                    break;
+
+                case 5:
                     break;
 
                 case 6:

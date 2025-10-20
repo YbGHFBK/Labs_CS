@@ -11,4 +11,11 @@
     {
         return letters;
     }
+
+    public bool isStartsWithConsonant()
+    {
+        string consonants = "бвгджзклмнпрстфхцчшщbcdfghjklmnpqrstvwxz";
+        if (consonants.Contains(letters.ToLower()[0])) return true;
+        return false;
+    }
 }

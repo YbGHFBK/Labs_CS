@@ -11,4 +11,9 @@
     {
         return ch.ToString();
     }
+
+    public char getChar()
+    {
+        return ch;
+    }
 }
