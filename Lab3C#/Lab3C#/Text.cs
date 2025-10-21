@@ -1,4 +1,11 @@
-﻿using System.Xml.Serialization;
+﻿using System.Text.RegularExpressions;
+using System.Xml.Serialization;
+
+public class WordInfo
+{
+    public int Count { get; set; } = 0;
+    public SortedSet<int> SentenceIndices { get; } = new SortedSet<int>();
+}
 
 [XmlRoot("Text")]
 public class Text
@@ -159,5 +166,38 @@ public class Text
         }
 
         return new Text(newSentences);
+    }
+
+    public SortedDictionary<string, WordInfo> BuildConcordance(bool ignoreCase = true)
+    {
+        var map = new Dictionary<string, WordInfo>();
+
+        for (int i = 0; i < Sentences.Count; i++)
+        {
+            var sentence = Sentences[i];
+
+            for (int j = 0; j < sentence.Words.Count; j++)
+            {
+                if (Sentences[i].Words[j] is Word)
+                {
+                    Word word = (Word)Sentences[i].Words[j];
+
+                    if (word is Word word_ && string.IsNullOrWhiteSpace(word_.Letters)) continue;
+
+                    var key = ignoreCase ? word.Letters.ToLowerInvariant() : word.Letters;
+
+                    if (!map.TryGetValue(key, out var info))
+                    {
+                        info = new WordInfo();
+                        map[key] = info;
+                    }
+
+                    info.Count++;
+                    info.SentenceIndices.Add(i + 1);
+                }
+            }
+        }
+
+        return new SortedDictionary<string, WordInfo>(map, StringComparer.Ordinal);
     }
 }

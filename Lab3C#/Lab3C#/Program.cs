@@ -35,6 +35,7 @@ class Program
                 5. В некотором предложении текста заменить слова заданной длины на указанную подстроку, длина которой может не совпадать с длиной слова
                 6. Удалить стоп-слова
                 7. Экспортировать текстовый объект в XML-документ
+                8. 4 лаба(составить соответствие)
                 0. Выход
 
                 Ваш выбор: 
@@ -91,6 +92,10 @@ class Program
                                 break;
 
                             case 8:
+                            PrintConcordance(text.BuildConcordance());
+                                break;
+
+                            case 9:
                                 Console.WriteLine(XmlSerializerHelper.DeserializeFromFile1(outputFile));
                                 break;
 
@@ -174,6 +179,16 @@ class Program
                 }
             }
             Console.WriteLine();
+        }
+    }
+
+    public static void PrintConcordance(SortedDictionary<string, WordInfo> index)
+    {
+        foreach (var kv in index)
+        {
+            var word = kv.Key;
+            var info = kv.Value;
+            Console.WriteLine($"{word}: {info.Count} [{string.Join(", ", info.SentenceIndices)}]");
         }
     }
 
