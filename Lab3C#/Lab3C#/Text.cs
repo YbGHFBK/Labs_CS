@@ -170,7 +170,7 @@ public class Text
 
     public SortedDictionary<string, WordInfo> BuildConcordance(bool ignoreCase = true)
     {
-        var map = new Dictionary<string, WordInfo>();
+        var map = new SortedDictionary<string, WordInfo>(StringComparer.Ordinal);
 
         for (int i = 0; i < Sentences.Count; i++)
         {
@@ -198,6 +198,6 @@ public class Text
             }
         }
 
-        return new SortedDictionary<string, WordInfo>(map, StringComparer.Ordinal);
+        return map;
     }
 }
