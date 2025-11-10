@@ -188,7 +188,12 @@ class Program
         {
             var word = kv.Key;
             var info = kv.Value;
-            Console.WriteLine($"{word}: {info.Count} [{string.Join(", ", info.SentenceIndices)}]");
+            if (info.isFirstLetter)
+            {
+                Console.WriteLine(word);
+            }
+            if(info.Count != 0)
+                Console.WriteLine($"{word}: {info.Count} [{string.Join(", ", info.SentenceIndices)}]");
         }
     }
 

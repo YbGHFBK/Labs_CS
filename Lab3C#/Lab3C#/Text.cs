@@ -3,8 +3,14 @@ using System.Xml.Serialization;
 
 public class WordInfo
 {
+    public bool isFirstLetter = false;
     public int Count { get; set; } = 0;
     public SortedSet<int> SentenceIndices { get; } = new SortedSet<int>();
+
+    public WordInfo(bool isFirstLetter = false)
+    {
+        this.isFirstLetter = isFirstLetter;
+    }
 }
 
 [XmlRoot("Text")]
@@ -182,9 +188,17 @@ public class Text
                 {
                     Word word = (Word)Sentences[i].Words[j];
 
+                    string ch = word.Letters[0].ToString().ToLowerInvariant();
+
                     if (word is Word word_ && string.IsNullOrWhiteSpace(word_.Letters)) continue;
 
                     var key = ignoreCase ? word.Letters.ToLowerInvariant() : word.Letters;
+
+                    if (!map.TryGetValue(ch, out var info1))
+                    {
+                        info1 = new WordInfo(true);
+                        map[ch] = info1;
+                    }
 
                     if (!map.TryGetValue(key, out var info))
                     {
@@ -193,7 +207,7 @@ public class Text
                     }
 
                     info.Count++;
-                    info.SentenceIndices.Add(i + 1);
+                    info.SentenceIndices.Add((int)(Math.Round((decimal)(i/20), 2) + 1));
                 }
             }
         }
