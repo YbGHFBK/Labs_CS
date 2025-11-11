@@ -1,6 +1,12 @@
-﻿public abstract class Item
+﻿using System.Xml.Serialization;
+
+[XmlInclude(typeof(Passenger))]
+[XmlInclude(typeof(Baggage))]
+[XmlInclude(typeof(Cargo))]
+public abstract class Item
 {
-    int weight {  get; set; }
+    [XmlAttribute]
+    public int weight {  get; set; }
 
     public Item() { }
 

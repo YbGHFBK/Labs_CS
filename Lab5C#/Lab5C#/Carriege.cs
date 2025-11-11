@@ -1,6 +1,12 @@
-﻿public abstract class Carriege
+﻿using System.Xml.Serialization;
+
+[XmlInclude(typeof(Locomotive))]
+[XmlInclude(typeof(PassengerCarriege))]
+[XmlInclude(typeof(CargoCarriege))]
+public abstract class Carriege
 {
-    int carryingCapacity {  get; set; }
+    [XmlAttribute]
+    public int carryingCapacity {  get; set; }
 
     public Carriege() { }
 

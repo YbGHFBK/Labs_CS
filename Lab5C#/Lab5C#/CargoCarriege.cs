@@ -1,6 +1,10 @@
-﻿public class CargoCarriege : Carriege
+﻿using System.Xml.Serialization;
+
+[XmlRoot("CargoCarriege")]
+public class CargoCarriege : Carriege
 {
-    List<Cargo> cargos = new();
+    [XmlElement("Cargo", typeof(Cargo))]
+    public List<Cargo> cargos = new();
 
     public CargoCarriege() { }
 
@@ -9,5 +13,17 @@
     public override string GetClass()
     {
         return "Cargo Carriege\t";
+    }
+
+    public override string ToString()
+    {
+        return base.ToString() + " тонн";
+    }
+
+    public override void Add(Item item)
+    {
+        if (item is not Cargo) throw new FormatException("В грузовом вагоне могут находиться только грузы");
+
+        cargos.Add((Cargo)item);
     }
 }

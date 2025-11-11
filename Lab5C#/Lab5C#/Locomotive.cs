@@ -1,4 +1,7 @@
-﻿public class Locomotive : Carriege
+﻿using System.Xml.Serialization;
+
+[XmlRoot("Locomotive")]
+public class Locomotive : Carriege
 {
     public Locomotive() { }
 
@@ -6,7 +9,7 @@
 
     public override string ToString()
     {
-        return base.ToString();
+        return base.ToString() + " вагонов";
     }
 
     public override string GetClass()

@@ -1,8 +1,16 @@
-﻿public class PassengerCarriege : Carriege
+﻿using System.Xml.Serialization;
+
+[XmlRoot("PassengerCarriege")]
+public class PassengerCarriege : Carriege
 {
-    int comfortLevel { get; set; }
-    List<Passenger> passengers = new();
-    List<Baggage> baggages = new();
+    [XmlAttribute]
+    public int comfortLevel { get; set; }
+
+    [XmlElement("Passenger", typeof(Passenger))]
+    public List<Passenger> passengers = new();
+
+    [XmlElement("Baggage", typeof(Baggage))]
+    public List<Baggage> baggages = new();
 
     int Items => passengers.Count + baggages.Count;
 
@@ -20,7 +28,7 @@
 
     public override string ToString()
     {
-        return base.ToString() + " \t| comfort level: " + comfortLevel;
+        return base.ToString() + " человек" + " \t| comfort level: " + comfortLevel;
     }
 
     public override void Add(Item item)
