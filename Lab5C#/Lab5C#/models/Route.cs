@@ -3,9 +3,9 @@
 [XmlRoot("Route")]
 public class Route
 {
-    [XmlIgnore]
+    [XmlElement]
     public Station routeStart;
-    [XmlIgnore]
+    [XmlElement]
     public Station routeEnd;
     [XmlAttribute("ID")]
     public int id;

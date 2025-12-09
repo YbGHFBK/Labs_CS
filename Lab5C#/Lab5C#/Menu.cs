@@ -204,6 +204,10 @@
                     Console.WriteLine(train.ToString());
                     continue;
 
+                case 6:
+                    Search(routes, r => $"{r.routeStart.city}-{r.routeEnd.city}");
+                    break;
+
                 case 7:
                     SaveTrain(train);
                     break;
@@ -269,10 +273,11 @@
 
     private static void PrintList<T>(List<T> list)
     {
-        int count = 0;
+        int count = 1;
         foreach(T item in list)
         {
-            Console.WriteLine((count + 1) + ". " + item.ToString());
+            Console.WriteLine((count) + ". " + item.ToString());
+            count++;
         }
     }
 
@@ -323,10 +328,8 @@
 
         FileWorker.SerializeToFile<Route>(
             route,
-            mainDir + routesDir + route.routeStart.city + "-" + route.routeEnd.city + " " + route.id
+            mainDir + routesDir + route.routeStart.city + "-" + route.routeEnd.city + " " + route.id + ".xml"
             );
-
-        Console.WriteLine(mainDir + routesDir + route.routeStart + "-" + route.routeEnd + " " + route.id);
 
         return route;
     }
@@ -336,42 +339,57 @@
         FileWorker.SerializeToFile<Train>(train, mainDir + trainsDir + train.model + train.id + ".xml");
     }
 
-    private static void Seacrch<T>(List<T> list)
+    private static void SearchBy<T>(List<T> items, Func<T, string> getSearchText, string input)
     {
+        var matches = items
+            .Where(item => getSearchText(item).Contains(input,
+            StringComparison.OrdinalIgnoreCase))
+            .Take(5)
+            .ToList();
+
+        Console.WriteLine();
+        for (int i = 0; i < matches.Count; i++)
+        {
+            try
+            {
+                Console.WriteLine($"{i + 1}. {getSearchText(matches[i])}");
+            }
+            catch (Exception e) { }
+        }
+    }
+
+    private static void Search<T>(List<T> list, Func<T, string> getSearchText)
+    {
+        Console.Clear();
         Console.WriteLine("Введите запрос (ESC для выхода):");
         string currentInput = "";
 
         while (true)
         {
+            SearchBy<T>(list, getSearchText, currentInput);
+
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
             if (keyInfo.Key == ConsoleKey.Escape) break;
-            if (keyInfo.Key == ConsoleKey.Backspace && currentInput.Length > 0)
+            if (keyInfo.Key == ConsoleKey.Backspace)
             {
-                currentInput = currentInput[..^1];
+                if(currentInput.Length > 0)
+                    currentInput = currentInput[..^1];
             }
-            else if(char.IsLetterOrDigit(keyInfo.KeyChar) || keyInfo.KeyChar == ' ')
+            else
             {
                 currentInput += keyInfo.KeyChar;
             }
 
             Console.Clear();
             Console.WriteLine("Введите запрос (ESC для выхода):");
-            Console.WriteLine(currentInput + '\n');
-
-            var matches = GetSuggestions(currentInput).Take(5).ToList();
-            for (int i = 0; i < matches.Length; i++)
-            {
-                Console.WriteLine($"  {i + 1}. {matches[i]}");
-            }
-            if (matches.Length == 0)
-                Console.WriteLine("  Нет подсказок");
+            Console.WriteLine(currentInput);
         }
     }
 
-    static IEnumerable<string> GetSuggestions<T>(string input, List<T> list)
-    {
-        if (string.IsNullOrEmpty(input)) return list;
-        return list.Where(s => s.Contains(input, StringComparison.OrdinalIgnoreCase));
-    }
+    //static IEnumerable<string> GetSuggestions<T>(string input, List<T> list)
+    //{
+    //    if (string.IsNullOrEmpty(input)) return list;
+    //    return list.Where(s => s.Contains(input, StringComparison.OrdinalIgnoreCase));
+    //}
 }

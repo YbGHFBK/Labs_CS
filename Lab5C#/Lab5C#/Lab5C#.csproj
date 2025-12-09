@@ -9,13 +9,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="bin\Debug\net8.0\Lab5C#.deps.json" />
+    <Content Include="bin\Debug\net8.0\Lab5C#.runtimeconfig.json" />
     <Content Include="bin\Debug\net8.0\TextFiles\Trains\C.O.L.E.1.xml" />
+    <Content Include="bin\Debug\net8.0\TextFiles\Trains\Сапсан1.xml" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="bin\Debug\net8.0\TextFiles\Routes\" />
     <Folder Include="bin\Debug\net8.0\TextFiles\Stations\" />
     <Folder Include="interfaces\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="bin\Debug\net8.0\Lab5C#.dll" />
+    <None Include="bin\Debug\net8.0\Lab5C#.exe" />
+    <None Include="bin\Debug\net8.0\Lab5C#.pdb" />
   </ItemGroup>
 
 </Project>
