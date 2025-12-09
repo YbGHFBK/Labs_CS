@@ -19,6 +19,8 @@ public class Text
     [XmlElement("Sentence")]
     public List<Sentence> Sentences { get; set; } = new List<Sentence>();
 
+    public int SentenceCount => Sentences.Count;
+
     public Text()
     {
         Sentences = new List<Sentence>();

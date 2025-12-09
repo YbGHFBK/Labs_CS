@@ -19,6 +19,8 @@ class Program
 
         text = TextParser.ParseText(str);
 
+        Console.WriteLine(text.SentenceCount);
+
         //PrintParsingResult(text);
 
         bool exit = false;

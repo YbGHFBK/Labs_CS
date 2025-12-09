@@ -9,7 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="bin\Debug\net8.0\TextFiles\in.xml" />
+    <Folder Include="bin\Debug\net8.0\TextFiles\" />
+    <Folder Include="interfaces\" />
   </ItemGroup>
 
 </Project>
