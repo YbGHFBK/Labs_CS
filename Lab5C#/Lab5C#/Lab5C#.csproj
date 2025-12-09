@@ -9,7 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="bin\Debug\net8.0\TextFiles\" />
+    <Content Include="bin\Debug\net8.0\TextFiles\Trains\C.O.L.E.1.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="bin\Debug\net8.0\TextFiles\Routes\" />
+    <Folder Include="bin\Debug\net8.0\TextFiles\Stations\" />
     <Folder Include="interfaces\" />
   </ItemGroup>
 
