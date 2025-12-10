@@ -299,6 +299,7 @@ public class Menu
 
     private static Route AddRoute()
     {
+        //Console.WriteLine("");
         Console.Write("Ввведите отправную станцию маршрута:\nВведите страну: ");
         string country1 = Console.ReadLine();
         Console.Write("Введите город: ");
@@ -342,53 +343,82 @@ public class Menu
         FileWorker.SerializeToFile<Train>(train, mainDir + trainsDir + train.model + train.id + ".xml");
     }
 
-    private static void SearchBy<T>(List<T> items, Func<T, string> getSearchText, string input)
+    private static int SearchBy<T>(List<T> items, Func<T, string> getSearchText, string input, int linePosition)
     {
         var matches = items
-            .Where(item =>
-            {
-                string text = getSearchText(item);
-                return text.Contains(input,
-                StringComparison.OrdinalIgnoreCase);
-            })
-            .Select(item =>
-            {
-                string text = getSearchText(item);
-                string pattern = Regex.Escape(input);
-                Match match = Regex.Match(text, pattern, RegexOptions.IgnoreCase);
+       .Select(item => {
+           var text = getSearchText(item) ?? string.Empty;
+           int idx = text.IndexOf(input, StringComparison.OrdinalIgnoreCase);
+           return (item, text, idx);
+       })
+       .Where(x => x.idx >= 0)
+       .Take(5)
+       .ToList();
 
-                return (item, match.Index, match.Index + match.Length);
-            })
-            .Take(5)
-            .ToList();
+        var prevBg = Console.BackgroundColor;
+        var prevFg = Console.ForegroundColor;
 
         Console.WriteLine();
         for (int i = 0; i < matches.Count; i++)
         {
+            var (item, text, start) = matches[i];
+            int length = input.Length;
+
+            if (start < 0) start = 0;
+            if (start > text.Length) start = text.Length;
+            if (start + length > text.Length) length = Math.Max(0, text.Length - start);
+
             try
             {
-                Console.Write((i + 1) + "." + getSearchText(matches[i].Item1).Substring(0, matches[i].Item2));
+                if (i == linePosition - 1)
+                {
+                    Console.BackgroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                }
+
+                //Console.Write($"{i + 1}. ");
+                Console.Write(text.Substring(0, start));
+
                 Console.BackgroundColor = ConsoleColor.Yellow;
                 Console.ForegroundColor = ConsoleColor.Black;
-                Console.Write(getSearchText(matches[i].Item1).Substring(matches[i].Item2, matches[i].Item3));
-                Console.BackgroundColor = ConsoleColor.Black;
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.WriteLine(getSearchText(matches[i].Item1).Substring(matches[i].Item3));
+
+                if (length > 0)
+                    Console.Write(text.Substring(start, length));
+
+                if (i == linePosition - 1)
+                {
+                    Console.BackgroundColor = ConsoleColor.White;
+                    Console.ForegroundColor = ConsoleColor.Black;
+                }
+                else
+                {
+                    Console.BackgroundColor = prevBg;
+                    Console.ForegroundColor = prevFg;
+                }
+                    Console.WriteLine(text.Substring(start + length));
+                //Console.WriteLine($"{text} [{start}, {start + length}]");
             }
-            catch (Exception e) { }
+            finally
+            {
+                Console.BackgroundColor = prevBg;
+                Console.ForegroundColor = prevFg;
+            }
         }
+        return matches.Count;
     }
 
     private static void Search<T>(List<T> list, Func<T, string> getSearchText)
     {
         int cursorPosition = 0;
+        int linePosition = 0;
+
         Console.Clear();
         Console.WriteLine("Введите запрос (ESC для выхода):\n");
         string currentInput = "";
 
         while (true)
         {
-            SearchBy<T>(list, getSearchText, currentInput);
+            int matchesCount = SearchBy<T>(list, getSearchText, currentInput, linePosition);
 
             Console.SetCursorPosition(cursorPosition, 1);
 
@@ -401,6 +431,7 @@ public class Menu
                 {
                     currentInput = currentInput.Substring(0, cursorPosition-1) + currentInput.Substring(cursorPosition);
                     cursorPosition--;
+                    linePosition = 0;
                 }
             }
             else if (keyInfo.Key == ConsoleKey.LeftArrow || keyInfo.Key == ConsoleKey.RightArrow)
@@ -415,10 +446,25 @@ public class Menu
                     cursorPosition++;
                 }
             }
+            else if (keyInfo.Key == ConsoleKey.DownArrow || keyInfo.Key == ConsoleKey.UpArrow)
+            {
+                if (keyInfo.Key == ConsoleKey.DownArrow)
+                {
+                    if(linePosition < matchesCount)
+                    {
+                        linePosition++;
+                    }
+                }
+                else if (linePosition > 0)
+                {
+                    linePosition--;
+                }
+            }
             else
             {
                 currentInput = currentInput.Substring(0, cursorPosition) + keyInfo.KeyChar + currentInput.Substring(cursorPosition);
                 cursorPosition++;
+                linePosition = 0;
             }
 
             Console.Clear();
