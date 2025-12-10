@@ -1,4 +1,6 @@
-﻿public class Menu
+﻿using System.Text.RegularExpressions;
+
+public class Menu
 {
     static string file = "";
     static string mainDir = "TextFiles/";
@@ -58,6 +60,7 @@
 
         while (true)
         {
+            Console.Clear();
             Console.Write("""
                 1. Добавить вагон
                 2. Удалить вагон
@@ -342,8 +345,20 @@
     private static void SearchBy<T>(List<T> items, Func<T, string> getSearchText, string input)
     {
         var matches = items
-            .Where(item => getSearchText(item).Contains(input,
-            StringComparison.OrdinalIgnoreCase))
+            .Where(item =>
+            {
+                string text = getSearchText(item);
+                return text.Contains(input,
+                StringComparison.OrdinalIgnoreCase);
+            })
+            .Select(item =>
+            {
+                string text = getSearchText(item);
+                string pattern = Regex.Escape(input);
+                Match match = Regex.Match(text, pattern, RegexOptions.IgnoreCase);
+
+                return (item, match.Index, match.Index + match.Length);
+            })
             .Take(5)
             .ToList();
 
@@ -352,7 +367,13 @@
         {
             try
             {
-                Console.WriteLine($"{i + 1}. {getSearchText(matches[i])}");
+                Console.Write((i + 1) + "." + getSearchText(matches[i].Item1).Substring(0, matches[i].Item2));
+                Console.BackgroundColor = ConsoleColor.Yellow;
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.Write(getSearchText(matches[i].Item1).Substring(matches[i].Item2, matches[i].Item3));
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(getSearchText(matches[i].Item1).Substring(matches[i].Item3));
             }
             catch (Exception e) { }
         }
@@ -360,36 +381,49 @@
 
     private static void Search<T>(List<T> list, Func<T, string> getSearchText)
     {
+        int cursorPosition = 0;
         Console.Clear();
-        Console.WriteLine("Введите запрос (ESC для выхода):");
+        Console.WriteLine("Введите запрос (ESC для выхода):\n");
         string currentInput = "";
 
         while (true)
         {
             SearchBy<T>(list, getSearchText, currentInput);
 
+            Console.SetCursorPosition(cursorPosition, 1);
+
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
             if (keyInfo.Key == ConsoleKey.Escape) break;
             if (keyInfo.Key == ConsoleKey.Backspace)
             {
-                if(currentInput.Length > 0)
-                    currentInput = currentInput[..^1];
+                if (currentInput.Length > 0)
+                {
+                    currentInput = currentInput.Substring(0, cursorPosition-1) + currentInput.Substring(cursorPosition);
+                    cursorPosition--;
+                }
+            }
+            else if (keyInfo.Key == ConsoleKey.LeftArrow || keyInfo.Key == ConsoleKey.RightArrow)
+            {
+                if (keyInfo.Key == ConsoleKey.LeftArrow)
+                {
+                    if (cursorPosition > 0)
+                        cursorPosition--;
+                }
+                else if (cursorPosition < currentInput.Length)
+                {
+                    cursorPosition++;
+                }
             }
             else
             {
-                currentInput += keyInfo.KeyChar;
+                currentInput = currentInput.Substring(0, cursorPosition) + keyInfo.KeyChar + currentInput.Substring(cursorPosition);
+                cursorPosition++;
             }
 
             Console.Clear();
-            Console.WriteLine("Введите запрос (ESC для выхода):");
+            Console.WriteLine("Введите запрос (ESC для выхода):" + cursorPosition);
             Console.WriteLine(currentInput);
         }
     }
-
-    //static IEnumerable<string> GetSuggestions<T>(string input, List<T> list)
-    //{
-    //    if (string.IsNullOrEmpty(input)) return list;
-    //    return list.Where(s => s.Contains(input, StringComparison.OrdinalIgnoreCase));
-    //}
 }
