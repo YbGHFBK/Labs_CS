@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
 
 [XmlRoot("Route")]
-public class Route : IHasId
+public class Route : IHasId, IComparable<Route>
 {
     [XmlElement]
     public Station routeStart;
@@ -53,5 +53,15 @@ public class Route : IHasId
     public void AddStation(Station station)
     {
         stations.Add(station);
+    }
+
+    public int CompareTo(Route? other)
+    {
+        if (other == null) return 1;
+
+        int countryCompare = this.routeStart.CompareTo(other.routeStart);
+        if (countryCompare != 0) return countryCompare;
+
+        return routeEnd.CompareTo(other.routeEnd);
     }
 }

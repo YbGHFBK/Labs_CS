@@ -10,8 +10,12 @@
             foreach (var item in list)
             {
                 if (item.Id == id)
-                    isValid = false; break;
+                {
+                    isValid = false; 
+                    break;
+                }
             }
+            Console.WriteLine('\n');
 
             if (isValid) return id;
 

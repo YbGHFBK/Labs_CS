@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 
 public class Menu
 {
@@ -14,7 +15,8 @@ public class Menu
     static public void MainLoop()
     {
 
-        Train train = DefineLists();
+        DefineLists();
+        Train train = PickTrain();
 
 
         string nextText = "";
@@ -55,6 +57,7 @@ public class Menu
                     continue;
 
                 case 4:
+                    nextText = GetList<Station>(stations);
                     continue;
 
                 case 5:
@@ -71,7 +74,7 @@ public class Menu
                     continue;
                     
                 case 8:
-                    AddRoute();
+                    nextText = AddRoute();
                     continue;
 
                 case 0:
@@ -129,10 +132,24 @@ public class Menu
         }
     }
 
+    private static string GetList<T>(List<T> list)
+    {
+        StringBuilder sb = new StringBuilder(list.Count * 20);
+
+        int count = 1;
+        foreach(T item in list)
+        {
+            sb.Append((count) + ". " + item.ToString() + '\n');
+            count++;
+        }
+
+        return sb.ToString();
+    }
+
     private static void PrintList<T>(List<T> list)
     {
         int count = 1;
-        foreach(T item in list)
+        foreach (T item in list)
         {
             Console.WriteLine((count) + ". " + item.ToString());
             count++;
@@ -168,7 +185,7 @@ public class Menu
         return train;
     }
 
-    private static Route AddRoute()
+    private static string AddRoute()
     {
         Station routeStart = Search(stations, s => $"{s.country}, {s.city}");
         
@@ -181,6 +198,11 @@ public class Menu
             string city1 = Console.ReadLine();
 
             routeStart = new Station(country1, city1, stations);
+
+            if(
+                CheckForIdentical<Station>(stations, routeStart)
+                )
+                return "Такая станция уже существует. Выберите её в поиске";
 
             FileWorker.SerializeToFile<Station>(routeStart, mainDir + stationsDir + routeStart.city + routeStart.Id + ".xml");
         }
@@ -196,17 +218,32 @@ public class Menu
 
             routeEnd = new Station(country2, city2, stations);
 
+            if (
+                CheckForIdentical<Station>(stations, routeEnd)
+                )
+                return "Такая станция уже существует. Выберите её в поиске";
+
             FileWorker.SerializeToFile<Station>(routeEnd, mainDir + stationsDir + routeEnd.city + routeEnd.Id + ".xml");
         }
 
         Route route = new Route(routeStart, routeEnd, routes);
+
+        if (routeStart.CompareTo(routeEnd) == 0)
+            return "Начальная станция не может совпадать с конечной.";
+
+        if (
+            CheckForIdentical<Route>(routes, route)
+            )
+            return "Такой маршрут уже существует.";
 
         FileWorker.SerializeToFile<Route>(
             route,
             mainDir + routesDir + route.routeStart.city + "-" + route.routeEnd.city + " " + route.Id + ".xml"
             );
 
-        return route;
+        DefineLists();
+
+        return "Маршрут успешно добавлен";
     }
 
     private static void SaveTrain(Train train)
@@ -475,7 +512,7 @@ public class Menu
         return;
     }
 
-    private static Train DefineLists()
+    private static void DefineLists()
     {
         Train train = new Train();
         string[] trainsFiles = Directory.GetFiles(mainDir + trainsDir);
@@ -500,12 +537,16 @@ public class Menu
                 FileWorker.DeserializeFromFile<Station>(stationFile)
                 );
         }
+    }
 
+    private static Train PickTrain()
+    {
+        Train train = new Train();
 
-        Console.WriteLine($"Выберите один из сохранённых поездов {1}-{trainsFiles.Length} или 0 для создания нового:");
+        Console.WriteLine($"Выберите один из сохранённых поездов {1}-{trains.Count} или 0 для создания нового:");
         PrintList(trains);
 
-        switch (MakeChoice(0, trainsFiles.Length, out int choice))
+        switch (MakeChoice(0, trains.Count, out int choice))
         {
             case 0:
                 train = AddTrain();
@@ -518,4 +559,22 @@ public class Menu
 
         return train;
     }
+
+    private static bool CheckForIdentical<T>(List<T> items, T obj) where T : IComparable<T>
+    {
+        bool isIdentical = false;
+
+        foreach (T item in items)
+        {
+            if(obj.CompareTo(item) == 0)
+            {
+                isIdentical = true;
+                break;
+            }
+        }
+
+        return isIdentical;
+
+    }
+
 }
