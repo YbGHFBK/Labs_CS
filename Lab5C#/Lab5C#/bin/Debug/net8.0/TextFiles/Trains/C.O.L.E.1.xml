@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Train Id="1" Type="Cargo" Condition="Running" Model="C.O.L.E." ReleaseDate="0001-01-01T00:00:00" Mileage="0">
-  <Carrieges />
+<Train Type="Cargo" Condition="Running" Model="C.O.L.E." ReleaseDate="0001-01-01T00:00:00" Mileage="0" Id="1">
+  <Carrieges>
+    <Locomotive carryingCapacity="0" />
+    <CargoCarriege carryingCapacity="0" />
+    <CargoCarriege carryingCapacity="0" />
+    <Locomotive carryingCapacity="0" />
+  </Carrieges>
 </Train>

@@ -12,7 +12,7 @@
     <Content Include="bin\Debug\net8.0\Lab5C#.deps.json" />
     <Content Include="bin\Debug\net8.0\Lab5C#.runtimeconfig.json" />
     <Content Include="bin\Debug\net8.0\TextFiles\Trains\C.O.L.E.1.xml" />
-    <Content Include="bin\Debug\net8.0\TextFiles\Trains\Сапсан1.xml" />
+    <Content Include="bin\Debug\net8.0\TextFiles\Trains\Сапсан3.xml" />
   </ItemGroup>
 
   <ItemGroup>

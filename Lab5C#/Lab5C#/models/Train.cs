@@ -50,11 +50,13 @@ public class Train : IHasId
         Id = IdGenerator.GetNextId(trains);
     }
 
-    public Train(TrainType type, TrainCondition condition, List<Train> trains)
+    public Train(TrainType type, TrainCondition condition, string model, List<Train> trains)
     {
         carrieges = new List<Carriege>();
         this.type = type;
         this.condition = condition;
+        this.model = model;
+        Console.WriteLine(model);
         Id = IdGenerator.GetNextId(trains);
     }
 
@@ -81,7 +83,7 @@ public class Train : IHasId
 
         foreach(Carriege car in carrieges)
         {
-            sb.Append(car.ToString() + '\n');
+            sb.Append('\n' + car.ToString());
         }
 
         return sb.ToString();
