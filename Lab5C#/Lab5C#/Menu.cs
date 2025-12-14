@@ -1,7 +1,11 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics;
 
 public class Menu
 {
+    static List<Train> trains = new();
+    static List<Route> routes = new();
+    static List<Station> stations = new();
+
     static string file = "";
     static string mainDir = "TextFiles/";
     static string trainsDir = "Trains/";
@@ -16,10 +20,6 @@ public class Menu
         string[] trainsFiles = Directory.GetFiles(mainDir + trainsDir);
         string[] routesFiles = Directory.GetFiles(mainDir + routesDir);
         string[] stationsFiles = Directory.GetFiles(mainDir + stationsDir);
-
-        List<Train> trains = new();
-        List<Route> routes = new();
-        List<Station> stations = new();
 
         foreach(string trainFile in trainsFiles)
         {
@@ -46,7 +46,7 @@ public class Menu
         switch (MakeChoice(0, trainsFiles.Length, out int choice))
         {
             case 0:
-                train = AddTrain();
+                //train = AddTrain();
                 break;
 
             default:
@@ -56,11 +56,15 @@ public class Menu
 
 
 
-
+        string nextText = "";
 
         while (true)
         {
             Console.Clear();
+
+            if (!string.IsNullOrEmpty(nextText))
+                Console.WriteLine($"{nextText}\n");
+
             Console.Write("""
                 1. Добавить вагон
                 2. Удалить вагон
@@ -79,45 +83,8 @@ public class Menu
             switch (MakeChoice(out choice))
             {
                 case 1:
-                    Console.Write("""
-                        1. Грузовой вагон
-                        2. Пассаижрский вагон
-                        3. Локомотив
-                        Ваш выбор:
-                        """);
-                    switch (MakeChoice())
-                    {
-                        case 1:
-                            if (train.Locomotives != 1)
-                            {
-                                Console.WriteLine("Вагон должен находится между начальным и конечным локомотивом.");
-                                break;
-                            }
-                            train.Add(new CargoCarriege());
-                            break;
-
-                        case 2:
-                            if (train.Locomotives != 1)
-                            {
-                                Console.WriteLine("Вагон должен находится между начальным и конечным локомотивом.");
-                                break;
-                            }
-                            train.Add(new PassengerCarriege());
-                            break;
-
-                        case 3:
-                            if (train.Locomotives > 2)
-                            {
-                                Console.WriteLine("У поезда не может быть больше двух локомотивов.");
-                                break;
-                            }
-                            train.Add(new Locomotive());
-                            break;
-
-                        default:
-                            Console.WriteLine("Введите целое число 1-3.");
-                            break;
-                    }
+                    AddCarriege(train, nextText);
+                    nextText = "Вагон успешно добавлен";
                     continue;
 
                 case 2:
@@ -200,7 +167,7 @@ public class Menu
                     continue;
 
                 case 4:
-                    train.id = 2;
+                    train.Id = 2;
                     break;
 
                 case 5:
@@ -214,7 +181,7 @@ public class Menu
                 case 7:
                     SaveTrain(train);
                     break;
-
+                    
                 case 8:
                     AddRoute();
                     break;
@@ -284,55 +251,52 @@ public class Menu
         }
     }
 
-    private static Train AddTrain()
-    {
-        Train train = new Train();
-        Console.Write("Модель поезда:");
-        train.model = Console.ReadLine();
-        Console.Write("ID поезда:");
-        train.id = int.Parse(Console.ReadLine());
+    //private static Train AddTrain()
+    //{
+    //    Train train = new Train();
+    //    Console.Write("Модель поезда:");
+    //    train.model = Console.ReadLine();
+    //    Console.Write("ID поезда:");
+    //    train.Id = int.Parse(Console.ReadLine());
 
-        train.id = 1;
+    //    train.Id = 1;
 
-        return train;
-    }
+    //    return train;
+    //}
 
     private static Route AddRoute()
     {
-        //Console.WriteLine("");
-        Console.Write("Ввведите отправную станцию маршрута:\nВведите страну: ");
-        string country1 = Console.ReadLine();
-        Console.Write("Введите город: ");
-        string city1 = Console.ReadLine();
-        Console.Write("Введите ID: ");
-        int id1 = int.Parse(Console.ReadLine());
+        Station routeStart = Search(stations, s => $"{s.country}, {s.city}");
+        if (routeStart == null)
+        {
+            Console.Write("Ввведите отправную станцию маршрута:\nВведите страну: ");
+            string country1 = Console.ReadLine();
+            Console.Write("Введите город: ");
+            string city1 = Console.ReadLine();
 
-        Station routeStart = new Station(country1, city1, id1);
+            routeStart = new Station(country1, city1, stations);
 
-        FileWorker.SerializeToFile<Station>(routeStart, mainDir + stationsDir + routeStart.city + routeStart.id + ".xml");
+            FileWorker.SerializeToFile<Station>(routeStart, mainDir + stationsDir + routeStart.city + routeStart.Id + ".xml");
+        }
 
+        Station routeEnd = Search(stations, s => $"{s.country}, {s.city}");
+        if (routeEnd == null)
+        {
+            Console.Write("Ввведите конечную станцию маршрута:\nВведите страну: ");
+            string country2 = Console.ReadLine();
+            Console.Write("Введите город: ");
+            string city2 = Console.ReadLine();
 
+            routeEnd = new Station(country2, city2, stations);
 
-        Console.Write("Ввведите конечную станцию маршрута:\nВведите страну: ");
-        string country2 = Console.ReadLine();
-        Console.Write("Введите город: ");
-        string city2 = Console.ReadLine();
-        Console.Write("Введите ID: ");
-        int id2 = int.Parse(Console.ReadLine());
+            FileWorker.SerializeToFile<Station>(routeEnd, mainDir + stationsDir + routeEnd.city + routeEnd.Id + ".xml");
+        }
 
-        Station routeEnd = new Station(country2, city2, id2);
-
-        FileWorker.SerializeToFile<Station>(routeEnd, mainDir + stationsDir + routeEnd.city + routeEnd.id + ".xml");
-
-
-        Console.Write("Введите id маршрута: ");
-        int id3 = int.Parse(Console.ReadLine());
-
-        Route route = new Route(routeStart, routeEnd, id3);
+        Route route = new Route(routeStart, routeEnd, routes);
 
         FileWorker.SerializeToFile<Route>(
             route,
-            mainDir + routesDir + route.routeStart.city + "-" + route.routeEnd.city + " " + route.id + ".xml"
+            mainDir + routesDir + route.routeStart.city + "-" + route.routeEnd.city + " " + route.Id + ".xml"
             );
 
         return route;
@@ -340,10 +304,10 @@ public class Menu
 
     private static void SaveTrain(Train train)
     {
-        FileWorker.SerializeToFile<Train>(train, mainDir + trainsDir + train.model + train.id + ".xml");
+        FileWorker.SerializeToFile<Train>(train, mainDir + trainsDir + train.model + train.Id + ".xml");
     }
 
-    private static int SearchBy<T>(List<T> items, Func<T, string> getSearchText, string input, int linePosition)
+    private static List<(T, string, int)> SearchBy<T>(List<T> items, Func<T, string> getSearchText, string input, int linePosition)
     {
         var matches = items
        .Select(item => {
@@ -404,10 +368,10 @@ public class Menu
                 Console.ForegroundColor = prevFg;
             }
         }
-        return matches.Count;
+        return matches;
     }
 
-    private static void Search<T>(List<T> list, Func<T, string> getSearchText)
+    private static T? Search<T>(List<T> list, Func<T, string> getSearchText) where T : class
     {
         int cursorPosition = 0;
         int linePosition = 0;
@@ -418,13 +382,13 @@ public class Menu
 
         while (true)
         {
-            int matchesCount = SearchBy<T>(list, getSearchText, currentInput, linePosition);
+            var matches = SearchBy<T>(list, getSearchText, currentInput, linePosition);
 
             Console.SetCursorPosition(cursorPosition, 1);
 
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
 
-            if (keyInfo.Key == ConsoleKey.Escape) break;
+            if (keyInfo.Key == ConsoleKey.Escape) return null;
             if (keyInfo.Key == ConsoleKey.Backspace)
             {
                 if (currentInput.Length > 0)
@@ -450,7 +414,7 @@ public class Menu
             {
                 if (keyInfo.Key == ConsoleKey.DownArrow)
                 {
-                    if(linePosition < matchesCount)
+                    if(linePosition < matches.Count)
                     {
                         linePosition++;
                     }
@@ -458,6 +422,13 @@ public class Menu
                 else if (linePosition > 0)
                 {
                     linePosition--;
+                }
+            }
+            else if (keyInfo.Key == ConsoleKey.Enter)
+            {
+                if (linePosition != 0)
+                {
+                    return matches[linePosition - 1].Item1;
                 }
             }
             else
@@ -470,6 +441,51 @@ public class Menu
             Console.Clear();
             Console.WriteLine("Введите запрос (ESC для выхода):" + cursorPosition);
             Console.WriteLine(currentInput);
+        }
+    }
+
+    private static void AddCarriege(Train train, string nextText)
+    {
+        nextText = "ВАгролгн усшепоно доабавелен!:)";
+
+        Console.Write("""
+                        1. Грузовой вагон
+                        2. Пассаижрский вагон
+                        3. Локомотив
+                        Ваш выбор:
+                        """);
+        switch (MakeChoice())
+        {
+            case 1:
+                if (train.Locomotives != 1)
+                {
+                    Console.WriteLine("Вагон должен находится между начальным и конечным локомотивом.");
+                    break;
+                }
+                train.Add(new CargoCarriege());
+                break;
+
+            case 2:
+                if (train.Locomotives != 1)
+                {
+                    Console.WriteLine("Вагон должен находится между начальным и конечным локомотивом.");
+                    break;
+                }
+                train.Add(new PassengerCarriege());
+                break;
+
+            case 3:
+                if (train.Locomotives > 2)
+                {
+                    Console.WriteLine("У поезда не может быть больше двух локомотивов.");
+                    break;
+                }
+                train.Add(new Locomotive());
+                break;
+
+            default:
+                Console.WriteLine("Введите целое число 1-3.");
+                break;
         }
     }
 }

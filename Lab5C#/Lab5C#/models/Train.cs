@@ -2,7 +2,7 @@
 using System.Xml.Serialization;
 
 [XmlRoot("Train")]
-public class Train
+public class Train : IHasId
 {
     [XmlArray("Carrieges")]
     [XmlArrayItem("Locomotive", typeof(Locomotive))]
@@ -11,7 +11,7 @@ public class Train
     public List<Carriege> carrieges = new();
 
     [XmlAttribute("Id")]
-    public int id;
+    public int Id {  get; set; }
 
     [XmlAttribute("Type")]
     public TrainType type;
@@ -43,17 +43,19 @@ public class Train
         carrieges = new List<Carriege>();
     }
 
-    public Train(TrainType type)
+    public Train(TrainType type, List<Train> trains)
     {
         carrieges = new List<Carriege>();
         this.type = type;
+        Id = IdGenerator.GetNextId(trains);
     }
 
-    public Train(TrainType type, TrainCondition condition)
+    public Train(TrainType type, TrainCondition condition, List<Train> trains)
     {
         carrieges = new List<Carriege>();
         this.type = type;
         this.condition = condition;
+        Id = IdGenerator.GetNextId(trains);
     }
 
     public void Add(Carriege carriege)
@@ -75,7 +77,7 @@ public class Train
     {
         StringBuilder sb = new();
 
-        sb.Append(model + " " + id);
+        sb.Append(model + " " + Id);
 
         foreach(Carriege car in carrieges)
         {

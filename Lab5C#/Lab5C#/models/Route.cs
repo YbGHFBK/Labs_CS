@@ -1,14 +1,14 @@
 ﻿using System.Xml.Serialization;
 
 [XmlRoot("Route")]
-public class Route
+public class Route : IHasId
 {
     [XmlElement]
     public Station routeStart;
     [XmlElement]
     public Station routeEnd;
     [XmlAttribute("ID")]
-    public int id;
+    public int Id {  get; set; }
 
     [XmlArray("Stations")]
     [XmlArrayItem("Station", typeof(Station))]
@@ -21,11 +21,18 @@ public class Route
 
     public Route() { }
 
+    public Route(Station routeStart, Station routeEnd, List<Route> routes)
+    {
+        this.routeStart = routeStart;
+        this.routeEnd = routeEnd;
+        Id = IdGenerator.GetNextId(routes);
+    }
+
     public Route(Station routeStart, Station routeEnd, int id)
     {
         this.routeStart = routeStart;
         this.routeEnd = routeEnd;
-        this.id = id;
+        Id = id;
 
         stations.Add(routeStart);
         stations.Add(routeEnd);
