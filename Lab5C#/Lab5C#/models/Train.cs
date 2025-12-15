@@ -33,7 +33,6 @@ public class Train : IHasId
 
 
 
-
     public int Locomotives => carrieges.Count(
         item => item is Locomotive
         );

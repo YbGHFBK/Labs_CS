@@ -28,4 +28,13 @@ public abstract class Carriege
     {
 
     }
+    public virtual string GetType()
+    {
+        return "BaseType";
+    }
+
+    public virtual double GetTypeCostModifier()
+    {
+        return -1.0;
+    }
 }

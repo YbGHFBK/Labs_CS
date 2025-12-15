@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="bin\Debug\net8.0\TextFiles\Users\" />
     <Folder Include="bin\Debug\net8.0\TextFiles\Routes\" />
     <Folder Include="bin\Debug\net8.0\TextFiles\Stations\" />
   </ItemGroup>

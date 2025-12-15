@@ -13,7 +13,7 @@ public class PassengerCarriege : Carriege
     public List<Baggage> baggages = new();
 
 
-    public Passenger[] seats = new Passenger[64];
+    public Passenger[] seats;
 
     public PassengerCarriegeType type;
 
@@ -24,6 +24,7 @@ public class PassengerCarriege : Carriege
 
     public PassengerCarriege(int carryingCapacity, int comfortLevel, PassengerCarriegeType type) : base(carryingCapacity)
     {
+        seats = new Passenger[carryingCapacity];
         this.comfortLevel = comfortLevel;
         this.type = type;
     }
@@ -62,5 +63,36 @@ public class PassengerCarriege : Carriege
         {
 
         }
+    }
+
+    public override string GetType()
+    {
+        return type.ToString();
+    }
+
+    public int GetFreeSeats()
+    {
+        int count = 0;
+
+        foreach (Passenger passenger in seats)
+        {
+            count++; 
+        }
+
+        return carryingCapacity - count;
+    }
+
+    public override double GetTypeCostModifier()
+    {
+        switch(type)
+        {
+            case PassengerCarriegeType.ReservedSeat:
+                return 1.35;
+            case PassengerCarriegeType.Seat:
+                return 1.10;
+            case PassengerCarriegeType.Compartment:
+                return 1.90;
+        }
+        return -1.0;
     }
 }

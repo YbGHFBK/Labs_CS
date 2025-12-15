@@ -8,7 +8,7 @@
 public enum CargoCarriegeType
 {
     Covered, //крытый
-    Refrigerators, //рефрижераторы
+    Refrigerator, //рефрижератор
     OpenTop, //полувагон, открытый
     Platform, //платформа
     Tank //цистерна

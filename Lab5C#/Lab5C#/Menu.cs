@@ -6,20 +6,34 @@ public class Menu
     static List<Train> trains = new();
     static List<Route> routes = new();
     static List<Station> stations = new();
+    static List<Passenger> users = new();
 
     static string mainDir = "TextFiles/";
-    static string trainsDir = "Trains/";
-    static string routesDir = "Routes/";
-    static string stationsDir = "Stations/";
+    static string trainsDir = mainDir + "Trains/";
+    static string routesDir = mainDir + "Routes/";
+    static string stationsDir = mainDir + "Stations/";
+    static string usersDir = mainDir + "Users/";
 
     static public void MainLoop()
     {
 
         DefineLists();
+
+        Passenger currentUser = new Passenger();
+        while (true)
+        {
+            currentUser = Logger.AuthUser(users);
+
+            if (currentUser != null)
+                break;
+        }
+        users.Add(currentUser);
+        FileWorker.SerializeToFile(currentUser, usersDir + currentUser.login + currentUser.Id + ".xml");
+
         Train train = PickTrain();
 
 
-        string nextText = "";
+        string nextText = "Вы успешно вошли в аккаунт";
 
         while (true)
         {
@@ -29,13 +43,16 @@ public class Menu
                 Console.WriteLine($"{nextText}\n");
 
             Console.Write("""
+                Выберите пункт меню:
                 1. Добавить вагон
                 2. Удалить вагон
                 3. Добавить объект в вагон
+                4. Вывести данные о пользователе
                 5. Вывести поезд
                 6. Выполнить поиск по маршрутам
                 7. Сохранить текущий поезд
                 8. Добавить маршрут
+                9. Купить билет
                 0. Выход
                 Ваш выбор: 
                 """);
@@ -57,7 +74,7 @@ public class Menu
                     continue;
 
                 case 4:
-                    nextText = GetList<Station>(stations);
+                    nextText = currentUser.ToString();
                     continue;
 
                 case 5:
@@ -76,6 +93,9 @@ public class Menu
                 case 8:
                     nextText = AddRoute();
                     continue;
+
+                case 9:
+                    break;
 
                 case 0:
                     break;
@@ -204,7 +224,9 @@ public class Menu
                 )
                 return "Такая станция уже существует. Выберите её в поиске";
 
-            FileWorker.SerializeToFile<Station>(routeStart, mainDir + stationsDir + routeStart.city + routeStart.Id + ".xml");
+            FileWorker.SerializeToFile<Station>(routeStart, stationsDir + routeStart.city + routeStart.Id + ".xml");
+
+            DefineLists();
         }
 
         Station routeEnd = Search(stations, s => $"{s.country}, {s.city}");
@@ -223,7 +245,9 @@ public class Menu
                 )
                 return "Такая станция уже существует. Выберите её в поиске";
 
-            FileWorker.SerializeToFile<Station>(routeEnd, mainDir + stationsDir + routeEnd.city + routeEnd.Id + ".xml");
+            FileWorker.SerializeToFile<Station>(routeEnd, stationsDir + routeEnd.city + routeEnd.Id + ".xml");
+
+            DefineLists();
         }
 
         Route route = new Route(routeStart, routeEnd, routes);
@@ -238,7 +262,7 @@ public class Menu
 
         FileWorker.SerializeToFile<Route>(
             route,
-            mainDir + routesDir + route.routeStart.city + "-" + route.routeEnd.city + " " + route.Id + ".xml"
+            routesDir + route.routeStart.city + "-" + route.routeEnd.city + " " + route.Id + ".xml"
             );
 
         DefineLists();
@@ -248,7 +272,7 @@ public class Menu
 
     private static void SaveTrain(Train train)
     {
-        FileWorker.SerializeToFile<Train>(train, mainDir + trainsDir + train.model + train.Id + ".xml");
+        FileWorker.SerializeToFile<Train>(train, trainsDir + train.model + train.Id + ".xml");
     }
 
     private static List<(T, string, int)> SearchBy<T>(List<T> items, Func<T, string> getSearchText, string input, int linePosition)
@@ -383,7 +407,7 @@ public class Menu
             }
 
             Console.Clear();
-            Console.WriteLine("Введите запрос (ESC для выхода):" + cursorPosition);
+            Console.WriteLine("Введите запрос (ESC для выхода):");
             Console.WriteLine(currentInput);
         }
     }
@@ -515,9 +539,10 @@ public class Menu
     private static void DefineLists()
     {
         Train train = new Train();
-        string[] trainsFiles = Directory.GetFiles(mainDir + trainsDir);
-        string[] routesFiles = Directory.GetFiles(mainDir + routesDir);
-        string[] stationsFiles = Directory.GetFiles(mainDir + stationsDir);
+        string[] trainsFiles = Directory.GetFiles(trainsDir);
+        string[] routesFiles = Directory.GetFiles(routesDir);
+        string[] stationsFiles = Directory.GetFiles(stationsDir);
+        string[] usersFiles = Directory.GetFiles(usersDir);
 
         foreach (string trainFile in trainsFiles)
         {
@@ -535,6 +560,12 @@ public class Menu
         {
             stations.Add(
                 FileWorker.DeserializeFromFile<Station>(stationFile)
+                );
+        }
+        foreach (string userFile in usersFiles)
+        {
+            users.Add(
+                FileWorker.DeserializeFromFile<Passenger>(userFile)
                 );
         }
     }
@@ -577,4 +608,43 @@ public class Menu
 
     }
 
+    private static string BuyTicket(Passenger user)
+    {
+        Route route = Search<Route>(routes, r => $"{r.routeStart.city}-{r.routeEnd.city}")!;
+
+        if (route == null)
+            return "Билет не был приобретён.";
+
+        Train train = Search<Train>(
+            SearchForTrainsWithRoute(
+                route.routeStart, route.routeEnd),
+            t => $"{t.type}-{t.model}"
+            )!;
+
+        if (train == null)
+            return "Билет не был приобретён.";
+
+        PassengerCarriege car = Search<PassengerCarriege>(
+            train.carrieges.GetRange(
+                1, train.carrieges.Count - 2).ConvertAll(c => (PassengerCarriege)c),
+            c => $"{c.GetType()}, свободных мест: {c.GetFreeSeats()}, цена: {route.distance * }"
+            )!;
+    }
+
+    private static List<Train> SearchForTrainsWithRoute(Station routeStart, Station routeEnd)
+    {
+        List<Train> sTrains = new();
+
+        foreach (Train train in trains)
+        {
+            if(train.route.routeStart.CompareTo(routeStart) == 0 
+                && train.route.routeEnd.CompareTo(routeEnd) == 0
+                && train.type == TrainType.Passenger)
+            {
+                sTrains.Add(train);
+            }
+        }
+
+        return sTrains;
+    }
 }
