@@ -15,12 +15,10 @@
                     break;
                 }
             }
-            Console.WriteLine('\n');
 
             if (isValid) return id;
 
             id++;
         }
-
     }
 }

@@ -22,11 +22,12 @@ public class Passenger : Item, IHasId
     public List<Ticket> tickets;
     public Passenger() { }
 
-    public Passenger(string login, string password, List<Passenger> users)
+    public Passenger(string login, string password, UserRole role, List<Passenger> users)
     {
         this.login = login;
         this.password = password;
-        IdGenerator.GetNextId(users);
+        this.role = role;
+        Id = IdGenerator.GetNextId(users);
     }
     public Passenger(int weight) : base(weight) { }
 

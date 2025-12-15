@@ -43,11 +43,18 @@
         Console.Write("Введите пароль: ");
         string password = Console.ReadLine()!;
 
-        return new Passenger(login, password, users);
+        return new Passenger(login, password, UserRole.Regular, users);
     }
 
     public static bool IsAdmin(Passenger user)
     {
         return (user.role == UserRole.Admin);
+    }
+
+    public static int RoleTo(Passenger user)
+    {
+        if (user.role == UserRole.Admin) return 1;
+        else if (user.role == UserRole.Regular) return 0;
+        else return -1;
     }
 }

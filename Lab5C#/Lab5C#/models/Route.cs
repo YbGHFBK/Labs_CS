@@ -15,16 +15,18 @@ public class Route : IHasId, IComparable<Route>
     public List<Station> stations = new();
 
     [XmlAttribute("Distance")]
+    
     public int distance;
     [XmlAttribute("TravelTime")]
     public int travelTime;
 
     public Route() { }
 
-    public Route(Station routeStart, Station routeEnd, List<Route> routes)
+    public Route(Station routeStart, Station routeEnd, int distance, List<Route> routes)
     {
         this.routeStart = routeStart;
         this.routeEnd = routeEnd;
+        this.distance = distance;
         Id = IdGenerator.GetNextId(routes);
     }
 

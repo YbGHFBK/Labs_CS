@@ -18,7 +18,6 @@ public class Menu
 
     static public void MainLoop()
     {
-
         DefineLists();
 
         Passenger currentUser = new Passenger();
@@ -32,8 +31,6 @@ public class Menu
         users.Add(currentUser);
         FileWorker.SerializeToFile(currentUser, usersDir + currentUser.login + currentUser.Id + ".xml");
 
-        //Train train = PickTrain();
-
         string nextText = "Вы успешно вошли в аккаунт";
 
         while (true)
@@ -42,20 +39,9 @@ public class Menu
 
             if (!string.IsNullOrEmpty(nextText))
                 Console.WriteLine($"{nextText}\n");
+            nextText = "";
 
-            Console.Write("""
-                Выберите пункт меню:
-                1. Вывести данные о пользователе
-                2. Выполнить поиск по маршрутам
-                3. Добавить маршрут
-                4. Купить билет
-                5. Просмотреть свои билеты
-                6. Действия с поездами
-                0. Выход
-                Ваш выбор: 
-                """);
-
-
+            PrintMenu(currentUser);
 
             switch (MakeChoice(out int choice))
             {
@@ -93,6 +79,36 @@ public class Menu
 
             if (choice == 0) break;
         }
+    }
+
+    private static void PrintMenu(Passenger user)
+    {
+        Console.WriteLine("""
+                Выберите пункт меню:
+                0. Выход
+                1. Вывести данные о пользователе
+                2. Выполнить поиск по маршрутам
+                """);
+
+        if (user.role == UserRole.Admin)
+        {
+            Console.WriteLine("""
+                3. Добавить маршрут
+                4. Действия с поездами
+                """);
+        }
+        else
+        {
+            Console.WriteLine("""
+                3. Купить билет
+                4. Просмотреть свои билеты
+                """);
+        }
+
+        Console.Write("""
+            0. Выход
+            Ваш выбор:
+            """);
     }
 
     private static int MakeChoice(out int choice)
@@ -172,6 +188,7 @@ public class Menu
         Console.WriteLine("""
             Выберите тип поезда:
             1. Грузовой
+            1. Грузовой
             2. Пассажирский
             """);
         switch(MakeChoice(1, 2, out int choice))
@@ -187,6 +204,8 @@ public class Menu
             default:
                 return null;
         }
+
+        FileWorker.SerializeToFile<Train>(train, trainsDir + train.model + train.Id + ".xml");
 
         return train;
     }
@@ -236,7 +255,10 @@ public class Menu
             DefineLists();
         }
 
-        Route route = new Route(routeStart, routeEnd, routes);
+        Console.Write("Введите расстояние маршрута в км: ");
+        int dist = MakeChoice();
+
+        Route route = new Route(routeStart, routeEnd, dist, routes);
 
         if (routeStart.CompareTo(routeEnd) == 0)
             return "Начальная станция не может совпадать с конечной.";
@@ -408,7 +430,16 @@ public class Menu
                 {
                     return "Вагон должен находится между начальным и конечным локомотивом";
                 }
-                train.Add(new CargoCarriege());
+                if (train.type != TrainType.Cargo)
+                    return "Тип вагона не соответствует типу поезда";
+
+                Console.Write("Введите грузоподъёмность вагона в тоннах: ");
+                int carCap = MakeChoice();
+
+                train.Add(new CargoCarriege(carCap));
+
+                FileWorker.SerializeToFile<Train>(train, trainsDir + train.model + train.Id + ".xml");
+
                 break;
 
             case 2:
@@ -416,7 +447,40 @@ public class Menu
                 {
                     return "Вагон должен находится между начальным и конечным локомотивом";
                 }
-                train.Add(new PassengerCarriege());
+                if (train.type != TrainType.Passenger)
+                    return "Тип вагона не соответствует типу поезда";
+
+                Console.Write("Введите количество мест вагона: ");
+                int pasCap = MakeChoice();
+
+                Console.WriteLine("""
+                    Выберите тип поезда:
+                    1. Плацкартный
+                    2. Сидячий
+                    3. Купейный
+                    """);
+
+                PassengerCarriegeType type = new();
+
+                switch(MakeChoice(1, 3, out int choice))
+                {
+                    case 1:
+                        type = PassengerCarriegeType.ReservedSeat;
+                        break;
+
+                    case 2:
+                        type = PassengerCarriegeType.Seat;
+                        break;
+
+                    case 3:
+                        type = PassengerCarriegeType.Compartment;
+                        break;
+                }
+
+                train.Add(new PassengerCarriege(pasCap, type));
+
+                FileWorker.SerializeToFile<Train>(train, trainsDir + train.model + train.Id + ".xml");
+
                 break;
 
             case 3:
@@ -425,6 +489,9 @@ public class Menu
                     return "У поезда не может быть больше двух локомотивов";
                 }
                 train.Add(new Locomotive());
+
+                FileWorker.SerializeToFile<Train>(train, trainsDir + train.model + train.Id + ".xml");
+
                 break;
 
             default:
@@ -446,6 +513,8 @@ public class Menu
                 throw new FormatException();
             }
             train.Delete(MakeChoice() - 1);
+
+            FileWorker.SerializeToFile<Train>(train, trainsDir + train.model + train.Id + ".xml");
         }
         catch (Exception ex)
         {
@@ -615,8 +684,7 @@ public class Menu
             return "Билет не был приобретён.";
 
         PassengerCarriege car = Search<PassengerCarriege>(
-            train.carrieges.GetRange(
-                1, train.carrieges.Count - 2).ConvertAll(c => (PassengerCarriege)c), //////////////
+            train.GetCarsExceptLocos().ConvertAll(c => (PassengerCarriege)c),
             c => $"{c.GetType()}, свободных мест: {c.GetFreeSeats()}, цена: {route.distance * c.GetTypeCostModifier()}"
             )!;
 
@@ -627,7 +695,7 @@ public class Menu
             return "В выбранном вагоне нет свободных мест";
 
         Ticket ticket = new Ticket(
-                user,
+                user.Id,
                 route,
                 train,
                 car,
@@ -665,10 +733,8 @@ public class Menu
         string nextText = "";
 
         Console.Clear();
-        PrintList<Train>(trains);
-        Train train = trains[
-            MakeChoice(1, trains.Count, out int choice) - 1
-            ];
+
+        Train train = PickTrain();
 
         while (true)
         {
@@ -685,7 +751,7 @@ public class Menu
                 0. Выход
                 """);
 
-            switch(MakeChoice(out choice))
+            switch(MakeChoice(out int choice))
             {
                 case 1:
                     nextText = SetTrainType(train);

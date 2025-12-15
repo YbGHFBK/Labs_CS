@@ -7,7 +7,7 @@ public class Ticket : IHasId
     public int Id {  get; set; }
 
     [XmlElement("Passenger")]
-    public Passenger passenger;
+    public int passengerId;
 
     [XmlElement("Route")]
     public Route route;
@@ -28,9 +28,9 @@ public class Ticket : IHasId
     public DateTime purchaseDate;
 
     public Ticket() { }
-    public Ticket(Passenger passenger, Route route, Train train, PassengerCarriege car, double price, int seat, List<Ticket> tickets)
+    public Ticket(int passenger, Route route, Train train, PassengerCarriege car, double price, int seat, List<Ticket> tickets)
     {
-        this.passenger = passenger;
+        passengerId = passenger;
         this.route = route;
         this.train = train;
         this.car = car;

@@ -6,9 +6,12 @@
     <CargoCarriege CarType="Cargo" carryingCapacity="0" Type="Covered" />
     <Locomotive CarType="Cargo" carryingCapacity="0" />
   </Carrieges>
-  <route Distance="0" TravelTime="0" ID="3">
-    <routeStart Country="Германия" City="Берлин" Id="5" />
-    <routeEnd Country="США" City="Нью-Йорк" Id="2" />
-    <Stations />
+  <route Distance="0" TravelTime="0" ID="1">
+    <routeStart Country="Беларусь" City="Гродно" Id="1" />
+    <routeEnd Country="Беларусь" City="Слуцк" Id="2" />
+    <Stations>
+      <Station Country="Беларусь" City="Гродно" Id="1" />
+      <Station Country="Беларусь" City="Слуцк" Id="2" />
+    </Stations>
   </route>
 </Train>

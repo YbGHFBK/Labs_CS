@@ -115,4 +115,19 @@ public class Train : IHasId
     {
         this.condition = condition;
     }
+
+    public List<Carriege> GetCarsExceptLocos()
+    {
+        List<Carriege> cars = new();
+
+        foreach(Carriege car in carrieges)
+        {
+            if (car is not Locomotive)
+            {
+                cars.Add(car);
+            }
+        }
+
+        return cars;
+    }
 }

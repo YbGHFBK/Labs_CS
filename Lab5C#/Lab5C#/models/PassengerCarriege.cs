@@ -22,6 +22,12 @@ public class PassengerCarriege : Carriege
 
     public PassengerCarriege() { }
 
+    public PassengerCarriege(int carryingCapacity, PassengerCarriegeType type) : base(carryingCapacity)
+    {
+        seats = new Passenger[carryingCapacity];
+        this.type = type;
+    }
+
     public PassengerCarriege(int carryingCapacity, int comfortLevel, PassengerCarriegeType type) : base(carryingCapacity)
     {
         seats = new Passenger[carryingCapacity];
@@ -79,9 +85,16 @@ public class PassengerCarriege : Carriege
     {
         int count = 0;
 
-        foreach (Passenger passenger in seats)
+        for (int i = 0; i < carryingCapacity; i++)
         {
-            count++; 
+            try
+            {
+                if (seats[i] is Passenger)
+                {
+                    count++;
+                }
+            }
+            catch { }
         }
 
         return carryingCapacity - count;
