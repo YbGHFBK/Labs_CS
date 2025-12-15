@@ -11,14 +11,24 @@
   <ItemGroup>
     <Content Include="bin\Debug\net8.0\Lab5C#.deps.json" />
     <Content Include="bin\Debug\net8.0\Lab5C#.runtimeconfig.json" />
+    <Content Include="bin\Debug\net8.0\TextFiles\Routes\Берлин-Нью-Йорк 3.xml" />
+    <Content Include="bin\Debug\net8.0\TextFiles\Routes\Гродно-Нью-Йорк 2.xml" />
+    <Content Include="bin\Debug\net8.0\TextFiles\Routes\Гродно-Слуцк 1.xml" />
+    <Content Include="bin\Debug\net8.0\TextFiles\Stations\Берлин5.xml" />
+    <Content Include="bin\Debug\net8.0\TextFiles\Stations\Гродно1.xml" />
+    <Content Include="bin\Debug\net8.0\TextFiles\Stations\Нью-Йорк2.xml" />
+    <Content Include="bin\Debug\net8.0\TextFiles\Stations\Париж3.xml" />
+    <Content Include="bin\Debug\net8.0\TextFiles\Stations\Рим6.xml" />
+    <Content Include="bin\Debug\net8.0\TextFiles\Stations\Слуцк4.xml" />
     <Content Include="bin\Debug\net8.0\TextFiles\Trains\C.O.L.E.1.xml" />
+    <Content Include="bin\Debug\net8.0\TextFiles\Trains\GGG2.xml" />
     <Content Include="bin\Debug\net8.0\TextFiles\Trains\Сапсан3.xml" />
+    <Content Include="bin\Debug\net8.0\TextFiles\Users\fff0.xml" />
+    <Content Include="bin\Debug\net8.0\TextFiles\Users\rrr0.xml" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="bin\Debug\net8.0\TextFiles\Users\" />
-    <Folder Include="bin\Debug\net8.0\TextFiles\Routes\" />
-    <Folder Include="bin\Debug\net8.0\TextFiles\Stations\" />
+    <Folder Include="bin\Debug\net8.0\TextFiles\Tickets\" />
   </ItemGroup>
 
   <ItemGroup>

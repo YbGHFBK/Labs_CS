@@ -7,12 +7,14 @@ public class Menu
     static List<Route> routes = new();
     static List<Station> stations = new();
     static List<Passenger> users = new();
+    static List<Ticket> tickets = new();
 
     static string mainDir = "TextFiles/";
     static string trainsDir = mainDir + "Trains/";
     static string routesDir = mainDir + "Routes/";
     static string stationsDir = mainDir + "Stations/";
     static string usersDir = mainDir + "Users/";
+    static string ticketsDir = mainDir + "Tickets/";
 
     static public void MainLoop()
     {
@@ -30,8 +32,7 @@ public class Menu
         users.Add(currentUser);
         FileWorker.SerializeToFile(currentUser, usersDir + currentUser.login + currentUser.Id + ".xml");
 
-        Train train = PickTrain();
-
+        //Train train = PickTrain();
 
         string nextText = "Вы успешно вошли в аккаунт";
 
@@ -44,15 +45,12 @@ public class Menu
 
             Console.Write("""
                 Выберите пункт меню:
-                1. Добавить вагон
-                2. Удалить вагон
-                3. Добавить объект в вагон
-                4. Вывести данные о пользователе
-                5. Вывести поезд
-                6. Выполнить поиск по маршрутам
-                7. Сохранить текущий поезд
-                8. Добавить маршрут
-                9. Купить билет
+                1. Вывести данные о пользователе
+                2. Выполнить поиск по маршрутам
+                3. Добавить маршрут
+                4. Купить билет
+                5. Просмотреть свои билеты
+                6. Действия с поездами
                 0. Выход
                 Ваш выбор: 
                 """);
@@ -62,40 +60,28 @@ public class Menu
             switch (MakeChoice(out int choice))
             {
                 case 1:
-                    nextText = AddCarriege(train);
-                    continue;
-
-                case 2:
-                    DeleteCar(train);
-                    continue;
-
-                case 3:
-                    AddItem(train);
-                    continue;
-
-                case 4:
                     nextText = currentUser.ToString();
                     continue;
 
-                case 5:
-                    nextText = train.ToString();
-                    continue;
-
-                case 6:
+                case 2:
                     Search(routes, r => $"{r.routeStart.city}-{r.routeEnd.city}");
                     continue;
-
-                case 7:
-                    SaveTrain(train);
-                    nextText = "Поезд успешшно сохранён";
-                    continue;
                     
-                case 8:
+                case 3:
                     nextText = AddRoute();
                     continue;
 
-                case 9:
-                    break;
+                case 4:
+                    nextText = BuyTicket(currentUser);
+                    continue;
+
+                case 5:
+                    nextText = GetList<Ticket>(tickets);
+                    continue;
+
+                case 6:
+                    EditTrain();
+                    continue;
 
                 case 0:
                     break;
@@ -268,11 +254,6 @@ public class Menu
         DefineLists();
 
         return "Маршрут успешно добавлен";
-    }
-
-    private static void SaveTrain(Train train)
-    {
-        FileWorker.SerializeToFile<Train>(train, trainsDir + train.model + train.Id + ".xml");
     }
 
     private static List<(T, string, int)> SearchBy<T>(List<T> items, Func<T, string> getSearchText, string input, int linePosition)
@@ -543,6 +524,7 @@ public class Menu
         string[] routesFiles = Directory.GetFiles(routesDir);
         string[] stationsFiles = Directory.GetFiles(stationsDir);
         string[] usersFiles = Directory.GetFiles(usersDir);
+        string[] ticketsFiles = Directory.GetFiles(ticketsDir);
 
         foreach (string trainFile in trainsFiles)
         {
@@ -566,6 +548,12 @@ public class Menu
         {
             users.Add(
                 FileWorker.DeserializeFromFile<Passenger>(userFile)
+                );
+        }
+        foreach (string ticketFile in ticketsFiles)
+        {
+            tickets.Add(
+                FileWorker.DeserializeFromFile<Ticket>(ticketFile)
                 );
         }
     }
@@ -615,6 +603,8 @@ public class Menu
         if (route == null)
             return "Билет не был приобретён.";
 
+        Console.WriteLine(route.ToString());
+
         Train train = Search<Train>(
             SearchForTrainsWithRoute(
                 route.routeStart, route.routeEnd),
@@ -626,9 +616,31 @@ public class Menu
 
         PassengerCarriege car = Search<PassengerCarriege>(
             train.carrieges.GetRange(
-                1, train.carrieges.Count - 2).ConvertAll(c => (PassengerCarriege)c),
-            c => $"{c.GetType()}, свободных мест: {c.GetFreeSeats()}, цена: {route.distance * }"
+                1, train.carrieges.Count - 2).ConvertAll(c => (PassengerCarriege)c), //////////////
+            c => $"{c.GetType()}, свободных мест: {c.GetFreeSeats()}, цена: {route.distance * c.GetTypeCostModifier()}"
             )!;
+
+        if (car == null)
+            return "Билет не был приобретён.";
+
+        if (car.GetFreeSeats() <= 0)
+            return "В выбранном вагоне нет свободных мест";
+
+        Ticket ticket = new Ticket(
+                user,
+                route,
+                train,
+                car,
+                (double)route.distance * car.GetTypeCostModifier(),
+                car.GetFreeSeatNumber(),
+                tickets
+                );
+
+        user.AddTicket(ticket);
+
+        FileWorker.SerializeToFile(ticket, ticketsDir + route.routeStart.city + "-" + route.routeEnd.city + ticket.Id + ".xml");
+
+        return "Билет успешно приобретён.";
     }
 
     private static List<Train> SearchForTrainsWithRoute(Station routeStart, Station routeEnd)
@@ -646,5 +658,129 @@ public class Menu
         }
 
         return sTrains;
+    }
+
+    private static void EditTrain()
+    {
+        string nextText = "";
+
+        Console.Clear();
+        PrintList<Train>(trains);
+        Train train = trains[
+            MakeChoice(1, trains.Count, out int choice) - 1
+            ];
+
+        while (true)
+        {
+            Console.Clear();
+            Console.WriteLine(nextText + '\n');
+            Console.WriteLine("""
+                Выберите действие в с поездом:
+                1. Изменить тип
+                2. Изменить маршрут
+                3. Изменить состояние
+                4. Добавить вагон
+                5. Удалить вагон
+                6. Вывести поезд
+                0. Выход
+                """);
+
+            switch(MakeChoice(out choice))
+            {
+                case 1:
+                    nextText = SetTrainType(train);
+                    continue;
+
+                case 2:
+                    SetTrainRoute(train);
+                    nextText = "Маршрут поезда успешно установлен.";
+                    continue;
+
+                case 3:
+                    SetTrainCondition(train);
+                    nextText = "Состояние поезда успешно изменёно.";
+                    continue;
+
+                case 4:
+                    nextText = AddCarriege(train);
+                    continue;
+
+                case 5:
+                    DeleteCar(train);
+                    continue;
+
+                case 6:
+                    nextText = train.ToString();
+                    continue;
+
+                case 0:
+                    break;
+
+                default:
+                    nextText = "Введите целое число 0-3";
+                    break;
+            }
+
+            if (choice == 0) break;
+        }
+    }
+
+    private static string SetTrainType(Train train)
+    {
+        Console.WriteLine("""
+            Выберите новый тип для поезда:
+            1. Грузовой
+            2. Пассажирский
+            """);
+
+        string res = train.SetType(
+            (MakeChoice(1, 2, out int choice) == 1 ? TrainType.Cargo : TrainType.Passenger)
+            );
+
+        FileWorker.SerializeToFile(train, trainsDir + train.model + train.Id + ".xml");
+
+        return res;
+    }
+
+    private static void SetTrainRoute(Train train)
+    {
+        Route route = Search<Route>(routes, r => $"{r.routeStart.city}-{r.routeEnd.city}")!;
+
+        if (route == null) return;
+
+        train.SetRoute(route);
+
+        FileWorker.SerializeToFile(train, trainsDir + train.model + train.Id + ".xml");
+    }
+
+    private static void SetTrainCondition(Train train)
+    {
+        Console.WriteLine("""
+            Выберите новый тип для поезда:
+            1. Работает
+            2. На обслуживании
+            3. В депо
+            """);
+
+        TrainCondition condition = new TrainCondition();
+
+        switch(MakeChoice(1, 3, out int choice))
+        {
+            case 1:
+                condition = TrainCondition.Running;
+                break;
+
+            case 2:
+                condition = TrainCondition.OnMaintenance;
+                break;
+
+            case 3:
+                condition = TrainCondition.AtTheDepot;
+                break;
+        }
+
+        train.SetCondition(condition);
+
+        FileWorker.SerializeToFile(train, trainsDir + train.model + train.Id + ".xml");
     }
 }

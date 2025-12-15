@@ -16,4 +16,9 @@ public class Locomotive : Carriege
     {
         return "Locomotive\t";
     }
+
+    public override TrainType GetCarType()
+    {
+        return new TrainType();
+    }
 }

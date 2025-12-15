@@ -64,4 +64,9 @@ public class Route : IHasId, IComparable<Route>
 
         return routeEnd.CompareTo(other.routeEnd);
     }
+
+    public override string ToString()
+    {
+        return routeStart.city + "-" + routeEnd.city;
+    }
 }

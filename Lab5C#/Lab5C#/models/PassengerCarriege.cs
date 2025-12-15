@@ -65,9 +65,14 @@ public class PassengerCarriege : Carriege
         }
     }
 
-    public override string GetType()
+    public override string GetCarSpecType()
     {
         return type.ToString();
+    }
+
+    public override TrainType GetCarType()
+    {
+        return TrainType.Passenger;
     }
 
     public int GetFreeSeats()
@@ -80,6 +85,21 @@ public class PassengerCarriege : Carriege
         }
 
         return carryingCapacity - count;
+    }
+
+    public int GetFreeSeatNumber()
+    {
+        bool isFree = false;
+
+        for (int i = 0; i < seats.Length; i++)
+        {
+            if (seats[i] == null)
+            {
+                isFree = true;
+                return i + 1;
+            }
+        }
+        return -1;
     }
 
     public override double GetTypeCostModifier()

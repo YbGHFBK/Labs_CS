@@ -8,7 +8,13 @@ public abstract class Carriege
     [XmlAttribute]
     public int carryingCapacity {  get; set; }
 
-    public Carriege() { }
+    [XmlAttribute("CarType")]
+    public TrainType carType;
+
+
+
+
+public Carriege() { }
 
     public Carriege(int carriyngCapacity)
     {
@@ -28,10 +34,12 @@ public abstract class Carriege
     {
 
     }
-    public virtual string GetType()
+    public virtual string GetCarSpecType()
     {
         return "BaseType";
     }
+
+    public abstract TrainType GetCarType();
 
     public virtual double GetTypeCostModifier()
     {

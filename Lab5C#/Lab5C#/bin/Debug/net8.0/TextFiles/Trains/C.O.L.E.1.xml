@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Train Type="Cargo" Condition="Running" Model="C.O.L.E." ReleaseDate="0001-01-01T00:00:00" Mileage="0" Id="1">
   <Carrieges>
-    <Locomotive carryingCapacity="0" />
-    <CargoCarriege carryingCapacity="0" />
-    <CargoCarriege carryingCapacity="0" />
-    <Locomotive carryingCapacity="0" />
+    <Locomotive CarType="Cargo" carryingCapacity="0" />
+    <CargoCarriege CarType="Cargo" carryingCapacity="0" Type="Covered" />
+    <CargoCarriege CarType="Cargo" carryingCapacity="0" Type="Covered" />
+    <Locomotive CarType="Cargo" carryingCapacity="0" />
   </Carrieges>
+  <route Distance="0" TravelTime="0" ID="3">
+    <routeStart Country="Германия" City="Берлин" Id="5" />
+    <routeEnd Country="США" City="Нью-Йорк" Id="2" />
+    <Stations />
+  </route>
 </Train>

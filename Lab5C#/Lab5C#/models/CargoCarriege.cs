@@ -28,9 +28,14 @@ public class CargoCarriege : Carriege
         cargos.Add((Cargo)item);
     }
 
-    public override string GetType()
+    public override string GetCarSpecType()
     {
         return type.ToString();
+    }
+
+    public override TrainType GetCarType()
+    {
+        return TrainType.Cargo;
     }
 
     public override double GetTypeCostModifier()

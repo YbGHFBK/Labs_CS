@@ -1,23 +1,42 @@
-﻿public class Ticket
-{
-    public int id;
+﻿using System.Xml.Serialization;
 
+[XmlRoot("Ticket")]
+public class Ticket : IHasId
+{
+    [XmlAttribute("Id")]
+    public int Id {  get; set; }
+
+    [XmlElement("Passenger")]
     public Passenger passenger;
 
-    public float price;
-
+    [XmlElement("Route")]
     public Route route;
 
+    [XmlElement("Train")]
+    public Train train;
+
+    [XmlElement("Car")]
     public PassengerCarriege car;
 
+    [XmlAttribute("Price")]
+    public double price;
+
+    [XmlAttribute("Seat")]
     public int seat;
 
+    [XmlAttribute("PurchaseDate")]
+    public DateTime purchaseDate;
 
-    public Ticket(int id, Passenger passenger, Route route, PassengerCarriege car)
+    public Ticket() { }
+    public Ticket(Passenger passenger, Route route, Train train, PassengerCarriege car, double price, int seat, List<Ticket> tickets)
     {
-        this.id = id;
         this.passenger = passenger;
         this.route = route;
+        this.train = train;
         this.car = car;
+        this.price = price;
+        this.seat = seat;
+        Id = IdGenerator.GetNextId(tickets);
+        purchaseDate = DateTime.Now;
     }
 }

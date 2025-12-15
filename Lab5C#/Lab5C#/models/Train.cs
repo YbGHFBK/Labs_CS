@@ -26,7 +26,7 @@ public class Train : IHasId
     [XmlAttribute("Mileage")]
     public int mileage;
 
-    [XmlIgnore] 
+    [XmlElement]
     public Route route;
 
 
@@ -71,7 +71,7 @@ public class Train : IHasId
 
     public void SetRoute(Route route)
     {
-        //this.route = route;
+        this.route = route;
     }
 
     public override string ToString()
@@ -86,5 +86,33 @@ public class Train : IHasId
         }
 
         return sb.ToString();
+    }
+
+    public string SetType(TrainType type)
+    {
+        if (type == this.type) return "Поезд уже является " + (type == TrainType.Passenger ? "пассажирским" : "грузовым");
+
+        bool hasWrongCars = false;
+
+        foreach (Carriege car in carrieges)
+        {
+            if (car.GetCarType() != type)
+            {
+                hasWrongCars = true;
+                break;
+            }
+        }
+
+        if (hasWrongCars)
+            return "Нельзя поменять тип поезда, пока он содержит вагоны другого типа";
+
+        this.type = type;
+
+        return "Тип поезда успешно изменён";
+    }
+
+    public void SetCondition(TrainCondition condition)
+    {
+        this.condition = condition;
     }
 }
