@@ -31,7 +31,7 @@ public class AuthStyleForm : Form
         titleBar = new Panel
         {
             Dock = DockStyle.Top,
-            Height = 30,
+            Height = 35,
             BackColor = Color.FromArgb(27, 35, 46)
         };
         Controls.Add(titleBar);
@@ -42,8 +42,8 @@ public class AuthStyleForm : Form
             Font = new Font("Segoe UI", 14f, FontStyle.Bold),
             TextAlign = ContentAlignment.MiddleCenter,
             BackColor = Color.Transparent,
-            ForeColor = Color.Transparent,
-            Size = new Size(30, 30),
+            ForeColor = Color.FromArgb(213, 220, 230),
+            Size = new Size(35, 35),
             Dock = DockStyle.Right,
 
             FlatStyle = FlatStyle.Flat,
