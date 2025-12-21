@@ -25,14 +25,14 @@ public class AuthStyleForm : Form
         ControlBox = false;
         Text = string.Empty;
         MaximizeBox = false;
-        BackColor = Color.FromArgb(27, 35, 46);
+        BackColor = Color.FromArgb(29, 30, 34);
         ClientSize = new Size(600, 350);
 
         titleBar = new Panel
         {
             Dock = DockStyle.Top,
             Height = 35,
-            BackColor = Color.FromArgb(27, 35, 46)
+            BackColor = Color.FromArgb(29, 30, 34)
         };
         Controls.Add(titleBar);
 
@@ -84,6 +84,6 @@ public class AuthStyleForm : Form
 
     private void CloseButton_Click(object? sender, EventArgs e)
     {
-        Close(); 
+        Application.Exit(); 
     }
 }

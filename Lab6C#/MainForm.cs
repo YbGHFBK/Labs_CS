@@ -6,5 +6,10 @@ namespace Lab6C_
         {
             InitializeComponent();
         }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

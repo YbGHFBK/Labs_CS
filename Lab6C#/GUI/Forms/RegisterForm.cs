@@ -1,21 +1,23 @@
-﻿public class LoginForm : AuthStyleForm
+﻿public class RegisterForm : AuthStyleForm
 {
     private FlowLayoutPanel flowPanel;
 
-    private Label lblLogin;
+    private Label lblReg;
 
     private Label lblName;
     private HintTextBox txtName;
     private Label lblPassword;
     private HintTextBox txtPassword;
+    private Label lblRepeatPass;
+    private HintTextBox txtRepeatPass;
 
-    private Button btnLogin;
-    private Button btnToReg;
+    private Button btnReg;
     private Label lblError;
+    private Button btnToLogIn;
 
-    public LoginForm() : base()
+    public RegisterForm() : base()
     {
-        btnToReg.Click += BtnToReg_Click;
+        btnToLogIn.Click += BtnToLogIn_Click;
     }
 
     protected override void InitializeComponent()
@@ -27,31 +29,20 @@
             FlowDirection = FlowDirection.TopDown,
             AutoSize = true,
             BackColor = Color.Transparent,
-            Padding = new Padding(100, 40, 150, 0)
+            Padding = new Padding(80, 40, 80, 0)
         };
         Controls.Add(flowPanel);
 
-        lblLogin = new Label
+        lblReg = new Label
         {
-            Text = "Войти",
-            Font = new Font("Segoe UI", 15f, FontStyle.Bold),
+            Text = "Создать аккаунт",
+            Font = new Font("Segoe UI", 14f, FontStyle.Bold),
             ForeColor = Color.Transparent,
             Anchor = AnchorStyles.None,
+            AutoSize = true,
             Margin = new Padding(20),
         };
-        flowPanel.Controls.Add(lblLogin);
-
-        lblName = new Label
-        {
-            Text = "Войдите, используя логин аккаунта",
-            Font = new Font("Segoe UI", 12f),
-            ForeColor = Color.FromArgb(213, 220, 230),
-
-            AutoSize = true,
-            Location = new Point(20, 70),
-            Width = 400,
-        };
-        //flowPanel.Controls.Add(lblEmail);
+        flowPanel.Controls.Add(lblReg);
 
         txtName = new HintTextBox
         {
@@ -68,33 +59,35 @@
         };
         flowPanel.Controls.Add(txtName);
 
-        lblPassword = new Label
-        {
-            Text = "Пароль",
-            Font = new Font("Segoe UI", 12f),
-            ForeColor = Color.FromArgb(213, 220, 230),
-
-            AutoSize = true,
-            Location = new Point(20, 130),
-            Width = 400,
-        };
-        //flowPanel.Controls.Add(lblPassword);
-
         txtPassword = new HintTextBox
         {
-            UseSystemPasswordChar = true,
             Font = new Font("Segoe UI", 12f),
             BorderStyle = BorderStyle.None,
-            CueText = "Пароль",
+            CueText = "Введите пароль",
+            UseSystemPasswordChar = true,
 
             BackColor = Color.FromArgb(37, 38, 42),
             ForeColor = Color.White,
 
-            Location = new Point(25, 160),
             Width = 400,
-            Height = 40,
+            Height = 40
         };
         flowPanel.Controls.Add(txtPassword);
+
+        txtRepeatPass = new HintTextBox
+        {
+            Font = new Font("Segoe UI", 12f),
+            BorderStyle = BorderStyle.None,
+            CueText = "Повторите пароль",
+            UseSystemPasswordChar = true,
+
+            BackColor = Color.FromArgb(37, 38, 42),
+            ForeColor = Color.White,
+
+            Width = 400,
+            Height = 40
+        };
+        flowPanel.Controls.Add(txtRepeatPass);
 
         lblError = new Label
         {
@@ -110,15 +103,15 @@
         lblError.Hide();
         flowPanel.Controls.Add(lblError);
 
-        btnLogin = new Button
+        btnReg = new Button
         {
-            Text = "Войти",
+            Text = "Создать аккаунт",
             Font = new Font("Segoe UI", 12f, FontStyle.Bold),
             TextAlign = ContentAlignment.MiddleCenter,
             BackColor = Color.FromArgb(133, 77, 216),
             ForeColor = Color.White,
 
-            Size = new Size(120, 30),
+            Size = new Size(200, 30),
             Margin = new Padding(120, 10, 120, 0),
 
             FlatStyle = FlatStyle.Flat,
@@ -129,11 +122,11 @@
                 MouseDownBackColor = Color.FromArgb(117,60,175)
             }
         };
-        flowPanel.Controls.Add(btnLogin);
+        flowPanel.Controls.Add(btnReg);
 
-        btnToReg = new Button
+        btnToLogIn = new Button
         {
-            Text = "Нет аккаунта? Перейти к регистрации",
+            Text = "Уже есть аккаунт? Войти",
             Font = new Font("SegoeUI", 9f, FontStyle.Underline),
             TextAlign = ContentAlignment.MiddleCenter,
             BackColor = Color.Transparent,
@@ -148,19 +141,11 @@
                 MouseDownBackColor = Color.Transparent
             }
         };
-        flowPanel.Controls.Add(btnToReg);
+        flowPanel.Controls.Add(btnToLogIn);
     }
 
-
-    private void BtnToReg_Click(object? sender, EventArgs e)
+    private void BtnToLogIn_Click(object? sender, EventArgs e)
     {
-        Hide();
-
-        var reg = new RegisterForm();
-        reg.FormClosed += (s, args) =>
-        {
-            Show();
-        };
-        reg.Show();
+        this.Close();
     }
 }
