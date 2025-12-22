@@ -8,8 +8,9 @@ namespace Lab6C_
         [STAThread]
         static void Main()
         {
+            DB.Initialize();
             ApplicationConfiguration.Initialize();
-            Application.Run(new MainPageForm());
+            Application.Run(new LoginForm());
         }
     }
 }

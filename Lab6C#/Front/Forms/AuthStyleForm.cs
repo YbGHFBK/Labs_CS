@@ -25,8 +25,8 @@ public class AuthStyleForm : Form
         ControlBox = false;
         Text = string.Empty;
         MaximizeBox = false;
-        BackColor = Color.FromArgb(29, 30, 34);
-        ClientSize = new Size(600, 350);
+        BackColor = Color.White;//FromArgb(29, 30, 34);
+        ClientSize = new Size(400, 500);
 
         titleBar = new Panel
         {

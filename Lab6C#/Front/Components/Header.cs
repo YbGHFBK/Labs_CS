@@ -51,7 +51,7 @@ public class Header : FlowLayoutPanel
             BackColor = Color.White,
             BorderRadius = 0,
             BorderSize = 0,
-            Size = new Size(200, 65),
+            Size = new Size(235, 65),
             ImageList = il1,
             ImageIndex = 0,
             Text = "MoveCore",
@@ -71,65 +71,71 @@ public class Header : FlowLayoutPanel
 
         var btnSettings = new DropDownRoundedButton
         {
-            Margin = new Padding(WIDTH - 600, 13, 0, 0),
+            Margin = new Padding(WIDTH - 670, 13, 0, 0),
             Padding = new Padding(5, 0, 0, 0),
 
             ForeColor = Color.Black,
             BackColor = Color.White,
-            BorderColor = Color.Red,
+            BorderColor = Color.FromArgb(250, 204, 206),
             BorderRadius = 10,
             BorderSize = 1,
-            Size = new Size(125, 40),
+            Size = new Size(130, 40),
             Icon = Image.FromFile("Images/Settings.png"),
             ButtonText = "Settings \u25BE",
-            Font = new Font("Segoe UI", 10f, FontStyle.Bold)
+            Font = new Font("Segoe UI", 10f, FontStyle.Bold),
+
+            HoverBackColor = Color.FromArgb(254, 242, 242),
+            PressedBackColor = Color.FromArgb(254, 242, 242),
+            HoverBorderColor = Color.Red,
+            PressedBorderColor = Color.Red,
+
         };
         Controls.Add(btnSettings);
 
-        var btnProfile = new RoundedButton()
+        var btnProfile = new DropDownRoundedButton
         {
             Margin = new Padding(20, 13, 0, 0),
             Padding = new Padding(5, 0, 0, 0),
+
             ForeColor = Color.Black,
             BackColor = Color.White,
-            BorderColor = Color.Red,
+            BorderColor = Color.FromArgb(250, 204, 206),
             BorderRadius = 10,
             BorderSize = 1,
-            Size = new Size(120, 40),
-            ImageList = il2,
-            ImageIndex = 1,
-            Text = "Account \u25BE",
+            Size = new Size(130, 40),
+            Icon = Image.FromFile("Images/Profile.png"),
+            ButtonText = "Account \u25BE",
             Font = new Font("Segoe UI", 10f, FontStyle.Bold),
-            ImageAlign = ContentAlignment.MiddleLeft,
-            TextAlign = ContentAlignment.MiddleLeft,
-            TextImageRelation = TextImageRelation.ImageBeforeText,
 
-            FlatAppearance =
-            {
-                MouseOverBackColor = Color.FromArgb(254,242,242),
-                MouseDownBackColor = Color.FromArgb(254,242,242)
-            }
+            HoverBackColor = Color.FromArgb(254, 242, 242),
+            PressedBackColor = Color.FromArgb(254, 242, 242),
+            HoverBorderColor = Color.Red,
+            PressedBorderColor = Color.Red,
+
         };
         Controls.Add(btnProfile);
 
-        var closeButton = new RoundedButton
+        var closeButton = new DropDownRoundedButton
         {
             Margin = new Padding(20, 13, 0, 0),
-            Padding = new Padding(3, 0, 0, 0),
+            Padding = new Padding(7, 0, 0, 0),
+
             ForeColor = Color.Black,
             BackColor = Color.White,
-            BorderColor = Color.Red,
+            BorderColor = Color.FromArgb(250, 204, 206),
             BorderRadius = 10,
             BorderSize = 1,
             Size = new Size(40, 40),
-            Text = "×",
-            Font = new Font("Segoe UI", 12f, FontStyle.Bold),
+            Icon = null,
+            ButtonText = "×",
+            Font = new Font("Segoe UI", 12.5f, FontStyle.Bold),
 
-            FlatAppearance =
-            {
-                MouseOverBackColor = Color.FromArgb(254,242,242),
-                MouseDownBackColor = Color.FromArgb(254,242,242)
-            }
+
+            HoverBackColor = Color.FromArgb(254, 242, 242),
+            PressedBackColor = Color.FromArgb(254, 242, 242),
+            HoverBorderColor = Color.Red,
+            PressedBorderColor = Color.Red,
+
         };
         Controls.Add(closeButton);
         closeButton.Click += CloseButton_Click;
