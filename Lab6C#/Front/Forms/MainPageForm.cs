@@ -16,7 +16,7 @@
         Text = string.Empty;
         ControlBox = false;
 
-        var header = new Header(WIDTH)
+        var header = new Header(WIDTH, this)
         {
             FlowDirection = FlowDirection.LeftToRight,
             BackColor = Color.White,

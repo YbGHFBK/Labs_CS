@@ -61,6 +61,14 @@ public class AuthStyleForm : Form
 
     protected virtual void InitializeComponent()
     {
+        SuspendLayout();
+        // 
+        // AuthStyleForm
+        // 
+        ClientSize = new Size(282, 253);
+        Name = "AuthStyleForm";
+        Load += AuthStyleForm_Load;
+        ResumeLayout(false);
     }
 
     private void TitleBar_MouseDown(object? sender, MouseEventArgs e)
@@ -84,6 +92,11 @@ public class AuthStyleForm : Form
 
     private void CloseButton_Click(object? sender, EventArgs e)
     {
-        Application.Exit(); 
+        Application.Exit();
+    }
+
+    private void AuthStyleForm_Load(object sender, EventArgs e)
+    {
+
     }
 }

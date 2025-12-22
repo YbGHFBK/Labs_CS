@@ -163,7 +163,8 @@
             BorderSize = 0,
             Size = new Size(340, 40),
             Icon = null,
-            ButtonText = "                           Create Account",
+            ButtonText = "Create Account",
+            ButtonTextFormat = TextFormatFlags.HorizontalCenter,
             Font = new Font("Segoe UI", 12f, FontStyle.Bold),
 
 
@@ -218,6 +219,16 @@
 
             case RegResult.PasswordMismatch:
                 lblError.Text = "Passwords don't match";
+                lblError.Show();
+                break;
+
+            case RegResult.InvalidNameFormat:
+                lblError.Text = "Invalid Name Format";
+                lblError.Show();
+                break;
+
+            case RegResult.InvalidPasswordFormat:
+                lblError.Text = "Invalid Password Format";
                 lblError.Show();
                 break;
         }

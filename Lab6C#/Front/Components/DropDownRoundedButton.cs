@@ -21,6 +21,7 @@ public class DropDownRoundedButton : UserControl
     private Image icon;
     private string label = "Button";
     private Padding contentPadding = new Padding(8);
+    private TextFormatFlags buttonTextFormat = TextFormatFlags.Left;
 
     private bool isHovered = false;
     private bool isPressed = false;
@@ -65,6 +66,9 @@ public class DropDownRoundedButton : UserControl
 
     [Browsable(true), Category("Appearance")]
     public string ButtonText { get => label; set { label = value ?? ""; Invalidate(); } }
+
+    [Browsable(true), Category("Appearance")]
+    public TextFormatFlags ButtonTextFormat { get => buttonTextFormat; set { buttonTextFormat = value; Invalidate(); } }
 
     private ContextMenuStrip dropDownMenu;
     [Browsable(true), Category("Behavior"), Description("Контекстное меню, которое будет показано по клику")]
@@ -160,7 +164,7 @@ public class DropDownRoundedButton : UserControl
         int rightReserve = DropDownMenu != null ? 16 : 0;
         Rectangle textRect = new Rectangle(x, rect.Top, rect.Width - (x - rect.Left) - contentPadding.Right - rightReserve, rect.Height);
 
-        TextFormatFlags flags = TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis;
+        TextFormatFlags flags = TextFormatFlags.VerticalCenter | buttonTextFormat | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis;
 
         Color textColor;
         if (!Enabled) textColor = Color.Gray;
@@ -213,34 +217,34 @@ public class DropDownRoundedButton : UserControl
     protected override void OnMouseEnter(EventArgs e) { base.OnMouseEnter(e); isHovered = true; Invalidate(); }
     protected override void OnMouseLeave(EventArgs e) { base.OnMouseLeave(e); isHovered = false; isPressed = false; Invalidate(); }
     protected override void OnMouseDown(MouseEventArgs e) { base.OnMouseDown(e); if (e.Button == MouseButtons.Left) { isPressed = true; Invalidate(); } }
-    protected override void OnMouseUp(MouseEventArgs e)
-    {
-        base.OnMouseUp(e);
-        if (isPressed && e.Button == MouseButtons.Left)
-        {
-            // клик — показываем меню (если есть) или вызываем обычный Click
-            if (DropDownMenu != null && DropDownMenu.Items.Count > 0)
-            {
-                // показываем меню прямо под кнопкой
-                // пометим isPressed = true (кнопка остаётся "нажатой") — сбросится при закрытии меню
-                isPressed = true;
-                Invalidate();
+    //protected override void OnMouseUp(MouseEventArgs e)
+    //{
+    //    base.OnMouseUp(e);
+    //    if (isPressed && e.Button == MouseButtons.Left)
+    //    {
+    //        // клик — показываем меню (если есть) или вызываем обычный Click
+    //        if (DropDownMenu != null && DropDownMenu.Items.Count > 0)
+    //        {
+    //            // показываем меню прямо под кнопкой
+    //            // пометим isPressed = true (кнопка остаётся "нажатой") — сбросится при закрытии меню
+    //            isPressed = true;
+    //            Invalidate();
 
-                // показываем меню
-                DropDownMenu.Show(this, new Point(0, Height));
-            }
-            else
-            {
-                OnClick(EventArgs.Empty);
-            }
-        }
-        // если меню был показан, сброс произойдёт в обработчике Closed
-        if (DropDownMenu == null)
-        {
-            isPressed = false;
-        }
-        Invalidate();
-    }
+    //            // показываем меню
+    //            DropDownMenu.Show(this, new Point(0, Height));
+    //        }
+    //        else
+    //        {
+    //            OnClick(EventArgs.Empty);
+    //        }
+    //    }
+    //    // если меню был показан, сброс произойдёт в обработчике Closed
+    //    if (DropDownMenu == null)
+    //    {
+    //        isPressed = false;
+    //    }
+    //    Invalidate();
+    //}
 
     // чтобы при нажатии клавишой Enter/Space работало
     protected override bool IsInputKey(Keys keyData) => keyData == Keys.Space || keyData == Keys.Enter ? true : base.IsInputKey(keyData);

@@ -28,7 +28,7 @@
             FlowDirection = FlowDirection.TopDown,
             AutoSize = true,
             BackColor = Color.Transparent,
-            Padding = new Padding(20, 40, 40, 0)
+            Padding = new Padding(20, 40, 20, 0)
         };
         Controls.Add(flowPanel);
 
@@ -47,7 +47,7 @@
         lblLogin = new Label
         {
             Text = "Sign in to access your bookings and preferences",
-            Font = new Font("Segoe UI", 11f),
+            Font = new Font("Segoe UI", 10f),
             ForeColor = Color.Black,
             BackColor = Color.Transparent,
             Anchor = AnchorStyles.None,
@@ -134,7 +134,8 @@
             BorderSize = 0,
             Size = new Size(340, 40),
             Icon = null,
-            ButtonText = "                               Sign In",
+            ButtonText = "Sign In",
+            ButtonTextFormat = TextFormatFlags.HorizontalCenter,
             Font = new Font("Segoe UI", 12f, FontStyle.Bold),
 
 
@@ -170,9 +171,10 @@
     private void BtnLogin_Click(object? sender, EventArgs e)
     {
         lblError.Hide();
-        switch(
+        switch (
             AuthService.LoginUser(txtName.Text, txtPassword.Text)
-        ){
+        )
+        {
             case LoginResult.Success:
                 Hide();
                 var mainForm = new MainPageForm();
@@ -190,6 +192,16 @@
                 lblError.Text = "Invalid Password";
                 lblError.Show();
                 break;
+
+            case LoginResult.InvalidNameFormat:
+                lblError.Text = "Invalid Name Format";
+                lblError.Show();
+                break;
+
+            case LoginResult.InvalidPasswordFormat:
+                lblError.Text = "Invalid Password Format";
+                lblError.Show();
+                break;
         }
     }
 
@@ -205,5 +217,5 @@
         reg.Show();
     }
 
-    
+
 }

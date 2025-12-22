@@ -2,7 +2,7 @@
 using System.Text;
 using System.Xml.Serialization;
 
-[XmlRoot("Passenger")]
+[XmlRoot("User")]
 public class User : IHasId
 {
     [XmlAttribute("ID")]
@@ -25,10 +25,10 @@ public class User : IHasId
 
     public User(string login, string password, UserRole role, List<User> users)
     {
-        //this.login = login;
-        //this.password = password;
-        //this.role = role;
-        //Id = IdGenerator.GetNextId(users);
+        this.name = login;
+        this.password = password;
+        this.role = role;
+        Id = IdGenerator.GetNextId(users);
     }
     //public Passenger(int weight) : base(weight) { }
 

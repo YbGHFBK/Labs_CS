@@ -8,9 +8,10 @@ public class Header : FlowLayoutPanel
     private int WIDTH;
     private int HEIGHT = 65;
 
-    public Header(int w) : base()
+    public Header(int w, Control? parent) : base()
     {
         WIDTH = w;
+        Parent = parent;
 
         InitializeComponent();
     }
@@ -43,14 +44,18 @@ public class Header : FlowLayoutPanel
         };
         il1.Images.Add(Image.FromFile("Images/Train.png"));
 
-        var btnLogo = new RoundedButton
+        var btnLogo = new System.Windows.Forms.Button
         {
             Margin = new Padding(50, 0, 0, 0),
             Padding = new Padding(0),
             ForeColor = Color.Black,
             BackColor = Color.White,
-            BorderRadius = 0,
-            BorderSize = 0,
+            FlatStyle = FlatStyle.Flat,
+            FlatAppearance =
+            {
+                BorderSize = 0,
+            },
+            Height = 65,
             Size = new Size(235, 65),
             ImageList = il1,
             ImageIndex = 0,
@@ -140,15 +145,18 @@ public class Header : FlowLayoutPanel
         Controls.Add(closeButton);
         closeButton.Click += CloseButton_Click;
 
-        var menu = new ContextMenuStrip();
-        menu.Items.Add("Profile", null, (_, __) => MessageBox.Show("Profile"));
-        menu.Items.Add("Security", null, (_, __) => MessageBox.Show("Security"));
-        menu.Items.Add(new ToolStripSeparator());
-        menu.Items.Add("Logout", null, (_, __) => MessageBox.Show("Logout"));
+        var menu = new AutoSizedMenuPanel();
+        menu.Width = 130;
+        menu.AddItem("Profile", () => MessageBox.Show("Profile!!"), Image.FromFile("Images/Train.png"));
+        menu.AddItem("Logout", () => MessageBox.Show("Logged out"));
+        menu.Visible = false;
+        this.Parent.Controls.Add(menu);
 
         btnSettings.Click += (s, e) =>
         {
-            menu.Show(btnSettings, new Point(0, btnSettings.Height));
+            menu.Location = new Point(btnSettings.Left, btnSettings.Bottom);
+            menu.Visible = true;
+            menu.BringToFront();
         };
 
     }

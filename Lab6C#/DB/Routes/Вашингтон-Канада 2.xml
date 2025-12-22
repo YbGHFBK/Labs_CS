@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Route Distance="-1" TravelTime="0" ID="2">
+  <routeStart Country="USA" City="Вашингтон" Id="3" />
+  <routeEnd Country="USA" City="Канада" Id="4" />
+  <Stations />
+</Route>

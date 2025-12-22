@@ -4,6 +4,8 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
 
 public static class DB
 {
+    private static List<Route> routes = new();
+    private static List<Station> stations = new();
     private static List<User> users = new();
 
     static string mainDir = "../../../DB/";
@@ -16,8 +18,8 @@ public static class DB
     public static void Initialize()
     {
         //string[] trainsFiles = Directory.GetFiles(trainsDir);
-        //string[] routesFiles = Directory.GetFiles(routesDir);
-        //string[] stationsFiles = Directory.GetFiles(stationsDir);
+        string[] routesFiles = Directory.GetFiles(routesDir);
+        string[] stationsFiles = Directory.GetFiles(stationsDir);
         string[] usersFiles = Directory.GetFiles(usersDir);
         //string[] ticketsFiles = Directory.GetFiles(ticketsDir);
 
@@ -27,18 +29,18 @@ public static class DB
         //        FileWorker.DeserializeFromFile<Train>(trainFile)
         //        );
         //}
-        //foreach (string routeFile in routesFiles)
-        //{
-        //    routes.Add(
-        //        FileWorker.DeserializeFromFile<Route>(routeFile)
-        //        );
-        //}
-        //foreach (string stationFile in stationsFiles)
-        //{
-        //    stations.Add(
-        //        FileWorker.DeserializeFromFile<Station>(stationFile)
-        //        );
-        //}
+        foreach (string routeFile in routesFiles)
+        {
+            routes.Add(
+                FileWorker.DeserializeFromFile<Route>(routeFile)
+                );
+        }
+        foreach (string stationFile in stationsFiles)
+        {
+            stations.Add(
+                FileWorker.DeserializeFromFile<Station>(stationFile)
+                );
+        }
         foreach (string userFile in usersFiles)
         {
             users.Add(
@@ -57,9 +59,11 @@ public static class DB
 
     public static User FindByName(string name)
     {
+        if (string.IsNullOrEmpty(name))
+            return null!;
         foreach (User user in users)
         {
-            if (user.name.Equals(name))
+            if (!string.IsNullOrEmpty(user.name) && user.name.Equals(name))
                 return user;
         }
 

@@ -78,6 +78,12 @@
     {
         User user = DB.FindByName(login);
 
+        if (string.IsNullOrEmpty(login))
+            return RegResult.InvalidNameFormat;
+
+        if (string.IsNullOrEmpty(password) || string.IsNullOrEmpty(repPassword))
+            return RegResult.InvalidPasswordFormat;
+
         if (user != null)
             return RegResult.NameTaken;
 

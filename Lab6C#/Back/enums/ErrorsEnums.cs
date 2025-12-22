@@ -3,7 +3,9 @@
     Success,
     UserNotFound,
     InvalidPassword,
-    InvalidEmailFormat
+    InvalidEmailFormat,
+    InvalidNameFormat,
+    InvalidPasswordFormat
 }
 
 public enum RegResult
@@ -11,5 +13,7 @@ public enum RegResult
     Success,
     NameTaken,
     PasswordMismatch,
-    InvalidEmailFormat
+    InvalidEmailFormat,
+    InvalidNameFormat,
+    InvalidPasswordFormat
 }
