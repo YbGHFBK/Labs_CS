@@ -14,6 +14,7 @@
     <None Remove="Images\Logo.png" />
     <None Remove="Images\Profile.png" />
     <None Remove="Images\Settings.png" />
+    <None Remove="Images\Train.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,6 +25,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Settings.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Train.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

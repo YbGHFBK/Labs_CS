@@ -1,4 +1,5 @@
-﻿using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+﻿using System.Drawing.Drawing2D;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
 
 public class Header : FlowLayoutPanel
@@ -16,91 +17,118 @@ public class Header : FlowLayoutPanel
 
     private void InitializeComponent()
     {
-        System.Windows.Forms.Button btnLogo = new System.Windows.Forms.Button
+        //System.Windows.Forms.Button btnLogo = new System.Windows.Forms.Button
+        //{
+        //    Text = string.Empty,
+        //    FlatStyle = FlatStyle.Flat,
+        //    BackColor = Color.Transparent,
+        //    ForeColor = Color.Transparent,
+
+        //    Size = new Size(130, 50),
+        //    Margin = new Padding(50, 8, 0, 0),
+
+        //    BackgroundImage = Image.FromFile("Images/Logo.png"),
+        //    BackgroundImageLayout = ImageLayout.Stretch,
+
+        //    FlatAppearance =
+        //    {
+        //        BorderSize = 0,
+        //        MouseOverBackColor = Color.Transparent,
+        //        MouseDownBackColor = Color.Transparent
+        //    }
+        //};
+        var il1 = new ImageList
         {
-            Text = string.Empty,
-            FlatStyle = FlatStyle.Flat,
-            BackColor = Color.Transparent,
-            ForeColor = Color.Transparent,
-
-            Size = new Size(130, 50),
-
-            BackgroundImage = Image.FromFile("Images/Logo.png"),
-            BackgroundImageLayout = ImageLayout.Stretch,
-
-            FlatAppearance =
-            {
-                BorderSize = 0,
-                MouseOverBackColor = Color.Transparent,
-                MouseDownBackColor = Color.Transparent
-            }
+            ImageSize = new Size(60, 60),
         };
-        Controls.Add(btnLogo);
+        il1.Images.Add(Image.FromFile("Images/Train.png"));
 
-        var il = new ImageList
+        var btnLogo = new RoundedButton
         {
-            ImageSize = new Size(20, 20),
-        };
-        il.Images.Add(Image.FromFile("Images/Settings.png"));
-        il.Images.Add(Image.FromFile("Images/Profile.png"));
-
-        var btnSettings = new RoundedButton()
-        {
-            Margin = new Padding(WIDTH - 560, 18, 0, 0),
-            Padding = new Padding(5, 0, 0, 0),
+            Margin = new Padding(50, 0, 0, 0),
+            Padding = new Padding(0),
             ForeColor = Color.Black,
             BackColor = Color.White,
-            BorderColor = Color.LightGray,
-            BorderRadius = 10,
-            BorderSize = 1,
-            Size = new Size(120, 30),
-            ImageList = il,
+            BorderRadius = 0,
+            BorderSize = 0,
+            Size = new Size(200, 65),
+            ImageList = il1,
             ImageIndex = 0,
-            Text = "Settings \u25BE",
-            Font = new Font("Segoe UI", 10f, FontStyle.Bold),
+            Text = "MoveCore",
+            Font = new Font("Segoe UI", 16f, FontStyle.Bold),
             ImageAlign = ContentAlignment.MiddleLeft,
             TextAlign = ContentAlignment.MiddleLeft,
             TextImageRelation = TextImageRelation.ImageBeforeText,
+        };
+        Controls.Add(btnLogo);
+
+        var il2 = new ImageList
+        {
+            ImageSize = new Size(25, 25),
+        };
+        il2.Images.Add(Image.FromFile("Images/Settings.png"));
+        il2.Images.Add(Image.FromFile("Images/Profile.png"));
+
+        var btnSettings = new DropDownRoundedButton
+        {
+            Margin = new Padding(WIDTH - 600, 13, 0, 0),
+            Padding = new Padding(5, 0, 0, 0),
+
+            ForeColor = Color.Black,
+            BackColor = Color.White,
+            BorderColor = Color.Red,
+            BorderRadius = 10,
+            BorderSize = 1,
+            Size = new Size(125, 40),
+            Icon = Image.FromFile("Images/Settings.png"),
+            ButtonText = "Settings \u25BE",
+            Font = new Font("Segoe UI", 10f, FontStyle.Bold)
         };
         Controls.Add(btnSettings);
 
         var btnProfile = new RoundedButton()
         {
-            Margin = new Padding(20, 18, 0, 0),
+            Margin = new Padding(20, 13, 0, 0),
             Padding = new Padding(5, 0, 0, 0),
             ForeColor = Color.Black,
             BackColor = Color.White,
-            BorderColor = Color.LightGray,
+            BorderColor = Color.Red,
             BorderRadius = 10,
             BorderSize = 1,
-            Size = new Size(120, 30),
-            ImageList = il,
+            Size = new Size(120, 40),
+            ImageList = il2,
             ImageIndex = 1,
             Text = "Account \u25BE",
             Font = new Font("Segoe UI", 10f, FontStyle.Bold),
             ImageAlign = ContentAlignment.MiddleLeft,
             TextAlign = ContentAlignment.MiddleLeft,
             TextImageRelation = TextImageRelation.ImageBeforeText,
+
+            FlatAppearance =
+            {
+                MouseOverBackColor = Color.FromArgb(254,242,242),
+                MouseDownBackColor = Color.FromArgb(254,242,242)
+            }
         };
         Controls.Add(btnProfile);
 
         var closeButton = new RoundedButton
         {
-            Margin = new Padding(20, 18, 0, 0),
+            Margin = new Padding(20, 13, 0, 0),
             Padding = new Padding(3, 0, 0, 0),
             ForeColor = Color.Black,
             BackColor = Color.White,
-            BorderColor = Color.LightGray,
+            BorderColor = Color.Red,
             BorderRadius = 10,
             BorderSize = 1,
-            Size = new Size(30, 30),
+            Size = new Size(40, 40),
             Text = "×",
-            Font = new Font("Segoe UI", 10f, FontStyle.Bold),
+            Font = new Font("Segoe UI", 12f, FontStyle.Bold),
 
             FlatAppearance =
             {
-                MouseOverBackColor = Color.DarkRed,
-                MouseDownBackColor = Color.IndianRed
+                MouseOverBackColor = Color.FromArgb(254,242,242),
+                MouseDownBackColor = Color.FromArgb(254,242,242)
             }
         };
         Controls.Add(closeButton);
