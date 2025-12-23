@@ -14,23 +14,36 @@
     private Button btnToReg;
     private Label lblError;
 
-    public LoginForm() : base()
+    public LoginForm(int Width, int Height) : base(Width, Height)
     {
         btnToReg.Click += BtnToReg_Click;
     }
 
     protected override void InitializeComponent()
     {
-        flowPanel = new FlowLayoutPanel()
+        var table = new TableLayoutPanel
         {
             Dock = DockStyle.Fill,
+            ColumnCount = 1,
+            RowCount = 1
+        };
+        table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+        table.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+
+        flowPanel = new FlowLayoutPanel()
+        {
+            Dock = DockStyle.Top,
+            WrapContents = false,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowOnly,
             Anchor = AnchorStyles.None,
             FlowDirection = FlowDirection.TopDown,
-            AutoSize = true,
             BackColor = Color.Transparent,
-            Padding = new Padding(20, 40, 20, 0)
+            Padding = new Padding(20, 40, 20, 0),
+            Margin = new Padding(0),
         };
-        Controls.Add(flowPanel);
+        table.Controls.Add(flowPanel, 0, 0);
+        this.Controls.Add(table);
 
         lblWelcome = new Label
         {
@@ -209,7 +222,7 @@
     {
         Hide();
 
-        var reg = new RegisterForm();
+        var reg = new RegisterForm(600, 840);
         reg.FormClosed += (s, args) =>
         {
             Show();

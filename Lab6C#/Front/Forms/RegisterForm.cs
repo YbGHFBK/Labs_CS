@@ -16,7 +16,7 @@
     private Button btnToLogin;
     private Label lblError;
 
-    public RegisterForm() : base()
+    public RegisterForm(int Width, int Height) : base(Width, Height)
     {
         btnToLogin.Click += BtnToLogin_Click;
     }

@@ -8,6 +8,47 @@ public class Header : FlowLayoutPanel
     private int WIDTH;
     private int HEIGHT = 65;
 
+    private IMessageFilter menuFilter;
+
+    private class ClickOutsideMenuFilter : IMessageFilter
+    {
+        private readonly Control menu;
+        private readonly Control button;
+
+        public ClickOutsideMenuFilter(Control menu, Control button)
+        {
+            this.menu = menu;
+            this.button = button;
+        }
+
+        public bool PreFilterMessage(ref Message m)
+        {
+            const int WM_LBUTTONDOWN = 0x0201;
+            const int WM_RBUTTONDOWN = 0x0204;
+
+            if (m.Msg == WM_LBUTTONDOWN || m.Msg == WM_RBUTTONDOWN)
+            {
+                if (!menu.Visible)
+                    return false;
+
+                Point p = Control.MousePosition;
+
+                bool clickOnMenu =
+                    menu.RectangleToScreen(menu.ClientRectangle).Contains(p);
+
+                bool clickOnButton =
+                    button.RectangleToScreen(button.ClientRectangle).Contains(p);
+
+                if (!clickOnMenu && !clickOnButton)
+                {
+                    menu.Hide();
+                }
+            }
+
+            return false;
+        }
+    }
+
     public Header(int w, Control? parent) : base()
     {
         WIDTH = w;
@@ -123,7 +164,7 @@ public class Header : FlowLayoutPanel
         var closeButton = new DropDownRoundedButton
         {
             Margin = new Padding(20, 13, 0, 0),
-            Padding = new Padding(7, 0, 0, 0),
+            //Padding = new Padding(7, 0, 0, 0),
 
             ForeColor = Color.Black,
             BackColor = Color.White,
@@ -134,7 +175,7 @@ public class Header : FlowLayoutPanel
             Icon = null,
             ButtonText = "×",
             Font = new Font("Segoe UI", 12.5f, FontStyle.Bold),
-
+            ButtonTextFormat = TextFormatFlags.HorizontalCenter,
 
             HoverBackColor = Color.FromArgb(254, 242, 242),
             PressedBackColor = Color.FromArgb(254, 242, 242),
@@ -148,15 +189,26 @@ public class Header : FlowLayoutPanel
         var menu = new AutoSizedMenuPanel();
         menu.Width = 130;
         menu.AddItem("Profile", () => MessageBox.Show("Profile!!"), Image.FromFile("Images/Train.png"));
-        menu.AddItem("Logout", () => MessageBox.Show("Logged out"));
+        menu.AddItem("Logout", () => SettingsButton_Logout());
         menu.Visible = false;
-        this.Parent.Controls.Add(menu);
+        Parent.Controls.Add(menu);
 
         btnSettings.Click += (s, e) =>
         {
+            if (menu.Visible)
+            {
+                menu.Hide();
+                return;
+            }
+
             menu.Location = new Point(btnSettings.Left, btnSettings.Bottom);
             menu.Visible = true;
             menu.BringToFront();
+
+            if (menuFilter == null)
+                menuFilter = new ClickOutsideMenuFilter(menu, btnSettings);
+
+            Application.AddMessageFilter(menuFilter);
         };
 
     }
@@ -164,5 +216,17 @@ public class Header : FlowLayoutPanel
     private void CloseButton_Click(object? sender, EventArgs e)
     {
         Application.Exit();
+    }
+
+    private void SettingsButton_Logout()
+    {
+        Parent.Hide();
+
+        var log = new LoginForm(600, 840);
+        log.FormClosed += (s, args) =>
+        {
+            Show();
+        };
+        log.Show();
     }
 }

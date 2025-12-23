@@ -1,7 +1,7 @@
 ﻿using System.Drawing.Drawing2D;
 using System.Runtime.InteropServices;
 
-public class AuthStyleForm : Form
+public class AuthStyleForm : RoundedForm1
 {
     private Panel titleBar;
     private Button closeButton;
@@ -9,66 +9,68 @@ public class AuthStyleForm : Form
     private bool _drag;
     private Point _dragStart;
 
-    public AuthStyleForm()
+    public AuthStyleForm(int Width, int Height) : base(Width, Height)
     {
+        ClientSize = new Size(600, 840);
+
         MainInitializeComponent();
         titleBar.MouseDown += TitleBar_MouseDown;
         titleBar.MouseMove += TitleBar_MouseMove;
         titleBar.MouseUp += TitleBar_MouseUp;
-        closeButton.Click += CloseButton_Click;
     }
 
     private void MainInitializeComponent()
     {
         StartPosition = FormStartPosition.CenterScreen;
-        FormBorderStyle = FormBorderStyle.FixedSingle;
         ControlBox = false;
         Text = string.Empty;
         MaximizeBox = false;
-        BackColor = Color.White;//FromArgb(29, 30, 34);
-        ClientSize = new Size(400, 500);
+        BackColor = Color.White;
 
         titleBar = new Panel
         {
             Dock = DockStyle.Top,
-            Height = 35,
-            BackColor = Color.FromArgb(29, 30, 34)
+            Height = 60,
+            BackColor = Color.White,
+            Padding = new Padding(0)
         };
         Controls.Add(titleBar);
 
-        closeButton = new Button
+        var closeButton = new DropDownRoundedButton
         {
-            Text = "×",
-            Font = new Font("Segoe UI", 14f, FontStyle.Bold),
-            TextAlign = ContentAlignment.MiddleCenter,
-            BackColor = Color.Transparent,
-            ForeColor = Color.FromArgb(213, 220, 230),
-            Size = new Size(35, 35),
-            Dock = DockStyle.Right,
+            Margin = new Padding(0, 10, 10, 10),
+            Padding = new Padding(7, 0, 0, 0),
 
-            FlatStyle = FlatStyle.Flat,
-            FlatAppearance =
-            {
-                BorderSize = 0,
-                MouseOverBackColor = Color.DarkRed,
-                MouseDownBackColor = Color.DarkRed
-            }
+            ForeColor = Color.Black,
+            BackColor = Color.White,
+            BorderColor = Color.White,//FromArgb(250, 204, 206),
+            BorderRadius = 7,
+            BorderSize = 1,
+            Size = new Size(30, 30),
+            Icon = Image.FromFile("Images/Cross.png"),
+            ButtonText = String.Empty,
+            Font = new Font("Segoe UI", 12.5f, FontStyle.Bold),
+            ButtonTextFormat = TextFormatFlags.HorizontalCenter,
+
+            HoverBackColor = Color.FromArgb(254, 242, 242),
+            PressedBackColor = Color.FromArgb(254, 242, 242),
+            HoverBorderColor = Color.Red,
+            PressedBorderColor = Color.Red,
         };
+
+        closeButton.Dock = DockStyle.None;
+        closeButton.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+        closeButton.Location = new Point(titleBar.ClientSize.Width - closeButton.Width - 5, 5);
+
         titleBar.Controls.Add(closeButton);
+        closeButton.Click += (sender, args) => Application.Exit();
 
         InitializeComponent();
     }
 
+
     protected virtual void InitializeComponent()
     {
-        SuspendLayout();
-        // 
-        // AuthStyleForm
-        // 
-        ClientSize = new Size(282, 253);
-        Name = "AuthStyleForm";
-        Load += AuthStyleForm_Load;
-        ResumeLayout(false);
     }
 
     private void TitleBar_MouseDown(object? sender, MouseEventArgs e)

@@ -10,7 +10,7 @@ namespace Lab6C_
         {
             DB.Initialize();
             ApplicationConfiguration.Initialize();
-            Application.Run(new LoginForm());
+            Application.Run(new LoginForm(600, 840));
         }
     }
 }
