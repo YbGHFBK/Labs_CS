@@ -39,11 +39,29 @@
             Anchor = AnchorStyles.None,
             FlowDirection = FlowDirection.TopDown,
             BackColor = Color.Transparent,
-            Padding = new Padding(20, 40, 20, 0),
+            Padding = new Padding(20, 0, 20, 0),
             Margin = new Padding(0),
         };
         table.Controls.Add(flowPanel, 0, 0);
         this.Controls.Add(table);
+
+        var p = new IconRoundedPanelWithShadow
+        {
+            Margin = new Padding(0),
+            Anchor = AnchorStyles.None,
+            Size = new Size(80, 80),
+            BorderRadius = 14,
+            BackColor = Color.White,
+            ForeColor = Color.Red,
+            BackgroundColor = Pallette.MainAccent,
+            Icon = Image.FromFile("Images/User.png"),
+            IconSize = new Size(30, 30),
+            Text = string.Empty,
+
+        };
+
+        flowPanel.Controls.Add(p);
+
 
         lblWelcome = new Label
         {
@@ -179,6 +197,17 @@
             }
         };
         flowPanel.Controls.Add(btnToReg);
+
+        var rtb = new RoundedTextBox
+        {
+            PlaceholderText = "email"
+        };
+        flowPanel.Controls.Add(rtb);
+        rtb._TextChanged += Rtb_TextChanged;
+    }
+
+    private void Rtb_TextChanged(object? sender, EventArgs e)
+    {
     }
 
     private void BtnLogin_Click(object? sender, EventArgs e)

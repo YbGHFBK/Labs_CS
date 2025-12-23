@@ -16,6 +16,7 @@
     <None Remove="Images\Profile.png" />
     <None Remove="Images\Settings.png" />
     <None Remove="Images\Train.png" />
+    <None Remove="Images\User.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,6 +34,9 @@
     </Content>
     <Content Include="Images\Train.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\User.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 
