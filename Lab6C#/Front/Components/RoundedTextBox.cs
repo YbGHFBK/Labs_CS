@@ -6,14 +6,14 @@ using System.Drawing.Drawing2D;
 public class RoundedTextBox : UserControl
 {
 
-    private Color borderColor = Color.MediumSlateBlue;
+    private Color borderColor = Pallette.SecAccent;
     private int borderSize = 2;
     private bool underlined = false;
     private TextBox tb;
-    private Color borderFocusColor = Color.HotPink;
+    private Color borderFocusColor = Pallette.MainAccent;
     private bool isFocused = false;
     private int borderRadius = 15;
-    private Color placeholderColor = Color.DarkGray;
+    private Color placeholderColor = Pallette.SecText;
     private string placeholderText = string.Empty;
     private bool isPlaceholder = false;
     private bool isPassword = false;
@@ -22,7 +22,7 @@ public class RoundedTextBox : UserControl
     public int BorderSize { get => borderSize; set { borderSize = value; Invalidate(); } }
     public bool Underlined { get => underlined; set { underlined = value; Invalidate(); } }
     public bool BorderFocusColor { get => underlined; set { underlined = value; Invalidate(); } }
-    public bool UseSystemPasswordChar { get => isPassword; set { isPassword = value; Invalidate(); } }
+    public bool IsPassword { get => isPassword; set { isPassword = value; tb.UseSystemPasswordChar = value; Invalidate(); } }
     public char PasswordChar { get => tb.PasswordChar; set { tb.PasswordChar = value; Invalidate(); } }
     public override Color BackColor { get => base.BackColor; set { base.BackColor = value; tb.BackColor = value; } }
     public override Color ForeColor { get => base.ForeColor; set { base.ForeColor = value; tb.ForeColor = value; } }
@@ -51,13 +51,7 @@ public class RoundedTextBox : UserControl
             }
         }
     }
-    public Color PlaceholderColor { get => placeholderColor; set
-        {
-            placeholderColor = value;
-            if (isPlaceholder)
-                tb.ForeColor = value;
-        }
-    }
+    public Color PlaceholderColor { get => placeholderColor; set => placeholderColor = value; }
     public string PlaceholderText
     {
         get => placeholderText; set
@@ -87,7 +81,7 @@ public class RoundedTextBox : UserControl
 
         BackColor = Color.White;
         ForeColor = Color.DimGray;
-        Font = new Font("Segoe UI", 10f);
+        Font = new Font("Segoe UI", 12f);
         AutoScaleMode = AutoScaleMode.None;
         Padding = new Padding(15);
         Size = new Size(250, 40);
@@ -263,6 +257,7 @@ public class RoundedTextBox : UserControl
     private void Tb_Enter(object? sender, EventArgs e)
     {
         isFocused = true;
+        borderSize = borderSize + 2;
         Invalidate();
         RemovePlaceholder();
     }
@@ -270,6 +265,7 @@ public class RoundedTextBox : UserControl
     private void Tb_Leave(object? sender, EventArgs e)
     {
         isFocused = false;
+        borderSize = borderSize - 2;
         Invalidate();
         SetPlaceholder();
     }

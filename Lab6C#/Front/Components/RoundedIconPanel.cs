@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
-public class IconRoundedPanelWithShadow : Control
+public class RoundedIconPanel : Control
 {
     // Настройки панели
     public int BorderRadius { get; set; } = 20;
@@ -17,7 +17,7 @@ public class IconRoundedPanelWithShadow : Control
     public int ShadowOpacity { get; set; } = 70; // От 0 до 255
     public int ShadowSize { get; set; } = 8;
 
-    public IconRoundedPanelWithShadow()
+    public RoundedIconPanel()
     {
         this.DoubleBuffered = true;
         this.Size = new Size(150, 100);
