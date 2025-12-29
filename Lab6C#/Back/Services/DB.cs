@@ -140,7 +140,7 @@ public static class DB
         
         schedules.Add(sc);
 
-        FileWorker.SerializeToFile(sc, schedulesDir + sc.RouteId + sc.Id + ".xml");
+        FileWorker.SerializeToFile(sc, schedulesDir + sc.RouteId + sc.TrainId + ".xml");
 
         return sc;
     }
@@ -190,6 +190,11 @@ public static class DB
         return t;
     }
 
+    public static void SaveTicket(Ticket t)
+    {
+        FileWorker.SerializeToFile(t, ticketsDir + t.Id + ".xml");
+    }
+
     public static T GetById<T>(int id) where T : IHasId
     {
         if (typeof(T) == typeof(Train))
@@ -222,13 +227,12 @@ public static class DB
                 if (id == user.Id)
                     return (T)(object)user;
             }
-
-
-        foreach (Schedule schedule in schedules)
-        {
-            if (id == schedule.Id)
-                return (T)(object)schedule;
-        }
+        if (typeof(T) == typeof(Schedule))
+            foreach (Schedule schedule in schedules)
+            {
+                if (id == schedule.Id)
+                    return (T)(object)schedule;
+            }
 
         return default!;
     }
@@ -279,6 +283,10 @@ public static class DB
         {
             FileWorker.SerializeToFile(r, routesDir + r.ToString() + r.Id + ".xml");
         }
+        foreach (Schedule sc in schedules)
+        {
+            FileWorker.SerializeToFile(sc, schedulesDir + sc.RouteId + sc.TrainId + ".xml");
+        }
     }
 
     public static void DeleteStation(Station station)
@@ -319,6 +327,21 @@ public static class DB
         {
             File.Delete(filePath);
             trains.Remove(t);
+        }
+        else
+        {
+            MessageBox.Show("Файл не найден по пути: " + filePath);
+        }
+    }
+
+    public static void DeleteSchedule(Schedule sc)
+    {
+        string filePath = schedulesDir + sc.RouteId + sc.TrainId + ".xml";
+
+        if (File.Exists(filePath))
+        {
+            File.Delete(filePath);
+            schedules.Remove(sc);
         }
         else
         {

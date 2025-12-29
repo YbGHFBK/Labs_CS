@@ -20,6 +20,8 @@ public class TicketInfoPanel : UserControl
 
     private DropDownRoundedButton btnBook;
 
+    public event Action<TicketInfoPanel> BookClicked;
+
     public TicketInfoPanel()
     {
         this.DoubleBuffered = true;
@@ -64,7 +66,7 @@ public class TicketInfoPanel : UserControl
 
     private void BtnBook_Click(object? sender, EventArgs e)
     {
-        
+        BookClicked?.Invoke(this);
     }
 
     private void UpdateButtonLocation()

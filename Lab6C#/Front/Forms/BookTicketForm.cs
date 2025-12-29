@@ -537,6 +537,7 @@ public class BookTicketForm : Form
             PassengerCarriege car = (PassengerCarriege)t.carrieges[sti.CarNum];
 
             var tPanel = new TicketInfoPanel();
+
             tPanel.TrainName = t.model;
             tPanel.TrainId = t.Id.ToString();
             tPanel.ClassType = car.type.ToString();
@@ -548,6 +549,42 @@ public class BookTicketForm : Form
             sti.CalcPrice();
             tPanel.Price = "$" + sti.Price.ToString();
             tPanel.SeatsLeft = car.freeSeats.ToString() + " seats left";
+
+            tPanel.BookClicked += (panel) =>
+            {
+                var data = panel;
+
+                var confirmPopup = new BookingConfirmationPanel(data);
+
+                confirmPopup.Location = new Point(
+                    (this.Width - confirmPopup.Width) / 2,
+                    (this.Height - confirmPopup.Height) / 2
+                );
+
+                confirmPopup.CancelClicked += () => {
+                    this.Controls.Remove(confirmPopup);
+                };
+
+                confirmPopup.ConfirmClicked += (email, passengers) => {
+                    Ticket ticket = new Ticket();
+                    ticket.UserId = AuthService.GetCurUserId();
+                    ticket.CarNum = sti.CarNum;
+                    ticket.Price = sti.Price;
+                    PassengerCarriege car = (PassengerCarriege)DB.GetById<Train>(sti.Schedule.TrainId).carrieges[sti.CarNum];
+                    ticket.Seat = car.GetFreeSeatNumber();
+                    ticket.PurchaseDate = DateTime.Now;
+                    ticket.ScheduleId = sti.Schedule.Id;
+
+                    DB.SaveTicket(ticket);
+
+                    car.freeSeats = car.freeSeats - 1;
+
+                    this.Controls.Remove(confirmPopup);
+                };
+
+                this.Controls.Add(confirmPopup);
+                confirmPopup.BringToFront();
+            };
 
             fpTickets.Controls.Add(tPanel);
         }

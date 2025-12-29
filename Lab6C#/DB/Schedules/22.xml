@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Schedule Id="2" Route="2" Train="2">
-  <DepartureDate>10:00:00</DepartureDate>
-  <ArrivalDate>10:00</ArrivalDate>
-  <Duration>10:00:00</Duration>
-</Schedule>

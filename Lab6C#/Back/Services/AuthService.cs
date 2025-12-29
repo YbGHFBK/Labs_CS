@@ -43,4 +43,9 @@
                 return false;
         return true;
     }
+
+    public static int GetCurUserId()
+    {
+        return currentUser.Id;
+    }
 }

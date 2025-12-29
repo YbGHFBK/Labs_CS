@@ -11,6 +11,9 @@ public class Ticket : IHasId
     [XmlAttribute("Car")]
     public int CarNum { get; set; }
 
+    [XmlAttribute("Schedule")]
+    public int ScheduleId { get; set; }
+
     [XmlAttribute("Price")]
     public double Price { get; set; }
 
@@ -18,7 +21,7 @@ public class Ticket : IHasId
     public int Seat { get; set; }
 
     [XmlAttribute("PurchaseDate")]
-    public TimeOnly PurchaseDate { get; set; }
+    public DateTime PurchaseDate { get; set; }
 
     public Ticket()
     {

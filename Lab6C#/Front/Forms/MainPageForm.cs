@@ -55,7 +55,34 @@
             Controls.Add(btnBook);
         }
 
-        if (AuthService.IsAdmin())
+        if (!AuthService.IsAdmin())
+        {
+            var btnViewTickets = new DropDownRoundedButton
+            {
+                Location = new Point(300, 350),
+                Margin = new Padding(300),
+                Size = new Size(200, 40),
+                ButtonText = "View your tickets",
+                Font = new Font("Segoe UI", 12f, FontStyle.Bold),
+                NormalBackColor = Pallette.MainAccent,
+                HoverBackColor = Pallette.DarkAccent,
+                PressedBackColor = Pallette.DarkAccent,
+                ForeColor = Color.White,
+                BorderSize = 0,
+                BorderRadius = 14,
+                Icon = null,
+                ButtonTextFormat = TextFormatFlags.HorizontalCenter,
+            };
+            btnViewTickets.Click += (s, e) =>
+            {
+                Hide();
+                var ticketsf = new TicketsForm();
+                ticketsf.Show();
+            };
+            Controls.Add(btnViewTickets);
+        }
+
+            if (AuthService.IsAdmin())
         {
             var btnSchedules = new DropDownRoundedButton
             {
