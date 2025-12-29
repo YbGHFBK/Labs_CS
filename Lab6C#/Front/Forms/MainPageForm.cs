@@ -82,7 +82,34 @@
             Controls.Add(btnViewTickets);
         }
 
-            if (AuthService.IsAdmin())
+        if (!AuthService.IsAdmin())
+        {
+            var btnBookFreight = new DropDownRoundedButton
+            {
+                Location = new Point(300, 400),
+                Margin = new Padding(300),
+                Size = new Size(200, 40),
+                ButtonText = "BookFreight",
+                Font = new Font("Segoe UI", 12f, FontStyle.Bold),
+                NormalBackColor = Pallette.MainAccent,
+                HoverBackColor = Pallette.DarkAccent,
+                PressedBackColor = Pallette.DarkAccent,
+                ForeColor = Color.White,
+                BorderSize = 0,
+                BorderRadius = 14,
+                Icon = null,
+                ButtonTextFormat = TextFormatFlags.HorizontalCenter,
+            };
+            btnBookFreight.Click += (s, e) =>
+            {
+                Hide();
+                var frf = new BookFreightForm(1920, 1080);
+                frf.Show();
+            };
+            Controls.Add(btnBookFreight);
+        }
+
+        if (AuthService.IsAdmin())
         {
             var btnSchedules = new DropDownRoundedButton
             {

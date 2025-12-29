@@ -9,7 +9,7 @@ public class RoundedTextBox : UserControl
     private Color borderColor = Pallette.SecAccent;
     private int borderSize = 2;
     private bool underlined = false;
-    private TextBox tb;
+    public TextBox tb;
     private Color borderFocusColor = Pallette.MainAccent;
     private bool isFocused = false;
     private int borderRadius = 15;

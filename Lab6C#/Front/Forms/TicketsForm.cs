@@ -78,7 +78,7 @@ public class TicketPanel : UserControl
 
         var user = DB.GetById<User>(ticket.UserId);
 
-        var schedule = DB.schedules.FirstOrDefault(s => s.Id == ticket.Id);
+        var schedule = DB.GetById<Schedule>(ticket.ScheduleId);
 
         TicketId = $"TICKET #{ticket.Id}";
         PassengerInfo = $"Passenger: {user?.name ?? "Unknown"}";
