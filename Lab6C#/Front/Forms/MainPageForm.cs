@@ -3,6 +3,9 @@
     private int WIDTH = 1920;
     private int HEIGHT = 1080;
 
+
+
+    private Button btn;
     public MainPageForm(int width, int height)
     {
         Width = width;
@@ -17,6 +20,7 @@
         ClientSize = new Size(WIDTH, HEIGHT);
         Text = string.Empty;
         ControlBox = false;
+        BackgroundImage = Image.FromFile("Images/Train.png");
 
         var header = new Header(WIDTH, this)
         {
@@ -217,5 +221,14 @@
             Controls.Add(btnTrains);
         }
 
+        btn = new Button
+        {
+            Size = new Size(100, 20),
+            Location = new Point(1820, 1060),
+            BackColor = Color.Red,
+            Text = "ButtonTest",
+        };
+        Controls.Add(btn);
+        btn.DoubleClick += (s, e) => MessageBox.Show("All ok");
     }
 }
