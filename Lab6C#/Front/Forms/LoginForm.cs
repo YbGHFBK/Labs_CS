@@ -299,12 +299,12 @@
     {
         lblError.Hide();
         switch (
-            AuthService.LoginUser(txtName.Text, txtPassword.Text)
+            AuthService.LoginUser(txtName.TbText, txtPassword.TbText)
         )
         {
             case LoginResult.Success:
                 Hide();
-                var mainForm = new MainPageForm();
+                var mainForm = new MainPageForm(1920, 1080);
                 mainForm.FormClosed += (_, __) => Close();
                 mainForm.Show();
 

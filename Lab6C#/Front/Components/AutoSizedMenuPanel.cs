@@ -16,6 +16,8 @@ public class AutoSizedMenuPanel : UserControl
     private Color backColorNormal = Color.White;
     private int itemHeight = 32;
 
+    private MenuItemData selectedItem = null!;
+
     private List<MenuItemData> items = new();
 
     public class MenuItemData
@@ -52,6 +54,8 @@ public class AutoSizedMenuPanel : UserControl
 
     [Browsable(true), Category("Appearance")]
     public int ItemHeight { get => itemHeight; set { itemHeight = Math.Max(20, value); RecalculateSize(); Invalidate(); } }
+
+    public MenuItemData SelectedItem { get => selectedItem; set { selectedItem = value; Invalidate(); } }
 
     public AutoSizedMenuPanel()
     {

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Route Distance="270" TravelTime="0" ID="1">
-  <routeStart Country="Беларусь" City="Гродно" Id="1" />
-  <routeEnd Country="Беларусь" City="Слуцк" Id="2" />
-  <Stations />
-</Route>

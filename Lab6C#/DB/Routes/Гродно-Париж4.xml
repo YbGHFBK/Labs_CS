@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Route Distance="2200" ID="4">
+  <routeStart Country="Беларусь" City="Гродно" Id="1" />
+  <routeEnd Country="Франция" City="Париж" Id="5" />
+  <Start>1</Start>
+  <End>5</End>
+</Route>

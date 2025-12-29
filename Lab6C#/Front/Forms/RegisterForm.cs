@@ -1,86 +1,119 @@
 ﻿public class RegisterForm : AuthStyleForm
 {
+    private readonly int WIDTH = 600;
+    private readonly int HEIGHT = 840;
+    private readonly int SIDEPAD = 50;
+
     private FlowLayoutPanel flowPanel;
 
-    private Label lblReg;
     private Label lblWelcome;
+    private Label lblReg;
 
     private Label lblName;
-    private HintTextBox txtName;
+    private RoundedTextBox txtName;
     private Label lblPassword;
-    private HintTextBox txtPassword;
-    private Label lblRepeatPassword;
-    private HintTextBox txtRepeatPassword;
+    private RoundedTextBox txtPassword;
+    private Label lblRepPassword;
+    private RoundedTextBox txtRepPassword;
 
     private DropDownRoundedButton btnReg;
-    private Button btnToLogin;
+    private Button btnToLog;
     private Label lblError;
 
     public RegisterForm(int Width, int Height) : base(Width, Height)
     {
-        btnToLogin.Click += BtnToLogin_Click;
+        WIDTH = Width;
+        HEIGHT = Height;
+        btnToLog.Click += BtnToLog_Click;
     }
 
     protected override void InitializeComponent()
     {
-        flowPanel = new FlowLayoutPanel()
+        var table = new TableLayoutPanel
         {
             Dock = DockStyle.Fill,
+            ColumnCount = 1,
+            RowCount = 1
+        };
+        table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+        table.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+
+        flowPanel = new FlowLayoutPanel()
+        {
+            Dock = DockStyle.Top,
+            WrapContents = false,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowOnly,
             Anchor = AnchorStyles.None,
             FlowDirection = FlowDirection.TopDown,
-            AutoSize = true,
             BackColor = Color.Transparent,
-            Padding = new Padding(20, 40, 40, 0)
+            Padding = new Padding(50, 0, 50, 0),
+            Margin = new Padding(0),
         };
-        Controls.Add(flowPanel);
+        table.Controls.Add(flowPanel, 0, 0);
+        this.Controls.Add(table);
 
-        lblReg = new Label
+        var userIcon = new RoundedIconPanel
         {
-            Text = "Create Account",
-            Font = new Font("Segoe UI", 15f),
-            ForeColor = Color.Black,
-            BackColor = Color.Transparent,
+            Margin = new Padding(0),
             Anchor = AnchorStyles.None,
-            Margin = new Padding(0, 20, 0, 20),
-            AutoSize = true,
+            Size = new Size(100, 100),
+            BorderRadius = 25,
+            BackColor = Color.White,
+            ForeColor = Pallette.MainAccent,
+            BackgroundColor = Pallette.MainAccent,
+            Icon = Image.FromFile("Images/User.png"),
+            IconSize = new Size(40, 40),
+            Text = string.Empty,
+
         };
-        flowPanel.Controls.Add(lblReg);
+        flowPanel.Controls.Add(userIcon);
 
         lblWelcome = new Label
         {
             AutoSize = true,
-            Text = "Join MoveCore and start your journey",
-            Font = new Font("Segoe UI", 11f),
-            ForeColor = Color.Black,
+            Text = "Create Account",
+            Font = new Font("Segoe UI", 28f),
+            ForeColor = Pallette.Text,
             BackColor = Color.Transparent,
             Anchor = AnchorStyles.None,
-            Margin = new Padding(0, 0, 0, 0),
+            Margin = new Padding(0, 20, 0, 0),
         };
         flowPanel.Controls.Add(lblWelcome);
 
+        lblReg = new Label
+        {
+            Text = "Join  and start your journey",
+            Font = new Font("Segoe UI", 16f),
+            ForeColor = Pallette.Text,
+            BackColor = Color.Transparent,
+            Anchor = AnchorStyles.None,
+            Margin = new Padding(0, 0, 0, 20),
+            AutoSize = true,
+        };
+        flowPanel.Controls.Add(lblReg);
+
         lblName = new Label
         {
+            Margin = new Padding(0, 50, 0, 0),
+
             Text = "Name",
-            Font = new Font("Segoe UI", 12f),
-            ForeColor = Color.Black,
+            Font = new Font("Segoe UI", 14f),
+            ForeColor = Pallette.Text,
 
             AutoSize = true,
-            Width = 400,
+            Width = WIDTH - SIDEPAD * 2,
         };
         flowPanel.Controls.Add(lblName);
 
-        txtName = new HintTextBox
+        txtName = new RoundedTextBox
         {
-            Margin = new Padding(0, 0, 20, 0),
-            Font = new Font("Segoe UI", 12f),
-            BorderStyle = BorderStyle.None,
-            CueText = "account name",
-
-            BackColor = Color.FromArgb(230, 230, 230),
-            ForeColor = Color.Black,
-
-            Width = 340,
-            Height = 40
+            PlaceholderText = "username",
+            Width = 500,
+            ForeColor = Pallette.Text,
+            PlaceholderColor = Pallette.SecText,
+            Padding = new Padding(20, 20, 20, 20),
+            Margin = new Padding(0, 0, 0, 20),
         };
         flowPanel.Controls.Add(txtName);
 
@@ -88,65 +121,58 @@
         {
             Text = "Password",
             Font = new Font("Segoe UI", 12f),
-            ForeColor = Color.Black,
+            ForeColor = Pallette.Text,
 
             AutoSize = true,
-            Width = 400,
+            Width = 500,
         };
         flowPanel.Controls.Add(lblPassword);
 
-        txtPassword = new HintTextBox
+        txtPassword = new RoundedTextBox
         {
-            Margin = new Padding(0, 0, 20, 0),
-            UseSystemPasswordChar = true,
-            Font = new Font("Segoe UI", 12f),
-            BorderStyle = BorderStyle.None,
-            CueText = "********",
-
-            BackColor = Color.FromArgb(230, 230, 230),
-            ForeColor = Color.Black,
-
-            Width = 340,
-            Height = 40,
+            IsPassword = true,
+            PasswordChar = '•',
+            PlaceholderText = "12345678",
+            Width = WIDTH - SIDEPAD * 2,
+            ForeColor = Pallette.Text,
+            Padding = new Padding(20, 20, 20, 20),
+            Margin = new Padding(0, 0, 0, 10),
         };
         flowPanel.Controls.Add(txtPassword);
 
-        lblRepeatPassword = new Label
+        lblRepPassword = new Label
         {
             Text = "Confirm Password",
             Font = new Font("Segoe UI", 12f),
-            ForeColor = Color.Black,
+            ForeColor = Pallette.Text,
 
             AutoSize = true,
-            Width = 400,
+            Width = 500,
         };
-        flowPanel.Controls.Add(lblRepeatPassword);
+        flowPanel.Controls.Add(lblRepPassword);
 
-        txtRepeatPassword = new HintTextBox
+        txtRepPassword = new RoundedTextBox
         {
-            Margin = new Padding(0, 0, 20, 0),
-            UseSystemPasswordChar = true,
-            Font = new Font("Segoe UI", 12f),
-            BorderStyle = BorderStyle.None,
-            CueText = "********",
-
-            BackColor = Color.FromArgb(230, 230, 230),
-            ForeColor = Color.Black,
-
-            Width = 340,
-            Height = 40,
+            IsPassword = true,
+            PasswordChar = '•',
+            PlaceholderText = "12345678",
+            Width = WIDTH - SIDEPAD * 2,
+            ForeColor = Pallette.Text,
+            Padding = new Padding(20, 20, 20, 20),
+            Margin = new Padding(0, 0, 0, 10),
         };
-        flowPanel.Controls.Add(txtRepeatPassword);
+        flowPanel.Controls.Add(txtRepPassword);
 
         lblError = new Label
         {
             Text = string.Empty,
-            Font = new Font("Segoe UI", 11f),
+            Font = new Font("Segoe UI", 12f),
             ForeColor = Color.Red,
+            Margin = new Padding(0, 10, 0, 10),
 
             BackColor = Color.White,
             AutoSize = true,
-            Width = 360,
+            Width = 500,
         };
         lblError.Hide();
         flowPanel.Controls.Add(lblError);
@@ -157,15 +183,17 @@
             Padding = new Padding(100, 0, 0, 0),
 
             ForeColor = Color.White,
-            NormalBackColor = Color.Red,
+            NormalBackColor = Pallette.MainAccent,
             BorderColor = Color.FromArgb(250, 204, 206),
             BorderRadius = 10,
             BorderSize = 0,
-            Size = new Size(340, 40),
+            Size = new Size(500, 60),
             Icon = null,
-            ButtonText = "Create Account",
+            ButtonText = "Sign In",
             ButtonTextFormat = TextFormatFlags.HorizontalCenter,
             Font = new Font("Segoe UI", 12f, FontStyle.Bold),
+            Dock = DockStyle.Fill,
+            Margin = new Padding(0, 10, 0, 0),
 
 
             HoverBackColor = Color.FromArgb(193, 0, 7),
@@ -175,15 +203,46 @@
         flowPanel.Controls.Add(btnReg);
         btnReg.Click += BtnReg_Click;
 
-        btnToLogin = new Button
+        var fpToReg = new FlowLayoutPanel
         {
-            Margin = new Padding(0, 20, 0, 0),
+            WrapContents = false,
+            AutoSize = true,
+            Anchor = AnchorStyles.None,
+            FlowDirection = FlowDirection.LeftToRight,
+            BackColor = Color.Transparent,
+            Padding = new Padding(10),
+            Margin = new Padding(0),
+            Width = 500,
+            Height = 40,
+        };
+        flowPanel.Controls.Add(fpToReg);
 
-            Text = "Already have an account?Sign in",
-            Font = new Font("SegoeUI", 9f, FontStyle.Underline),
+        var lblToReg = new Label
+        {
+            Size = new Size(165, 40),
+            Margin = new Padding(0),
+            TextAlign = ContentAlignment.MiddleRight,
+            Dock = DockStyle.Fill,
+            Text = "Already have an account?",
+            Font = new Font("Segoe UI", 10f),
+            BackColor = Color.Transparent,
+            ForeColor = Pallette.SecText,
+        };
+        fpToReg.Controls.Add(lblToReg);
+
+        btnToLog = new Button
+        {
+            Size = new Size(50, 40),
+
+            Padding = new Padding(0),
+            Margin = new Padding(0, 1, 0, 0),
+            Image = null,
+
+            Text = "Sign in",
+            Font = new Font("SegoeUI", 10f),
             TextAlign = ContentAlignment.MiddleCenter,
             BackColor = Color.Transparent,
-            ForeColor = Color.FromArgb(115, 115, 115),
+            ForeColor = Pallette.MainAccent,
             AutoSize = true,
 
             FlatStyle = FlatStyle.Flat,
@@ -194,31 +253,57 @@
                 MouseDownBackColor = Color.Transparent
             }
         };
-        flowPanel.Controls.Add(btnToLogin);
+        btnToLog.MouseEnter += BtnToLog_MouseEnter;
+        btnToLog.MouseLeave += BtnToLog_MouseLeave;
+        fpToReg.Controls.Add(btnToLog);
+
+        var rtb = new RoundedTextBox
+        {
+            PlaceholderText = "email"
+        };
+        rtb._TextChanged += Rtb_TextChanged;
+    }
+
+    private void BtnToLog_MouseEnter(object? sender, EventArgs e)
+    {
+        Font buf = btnToLog.Font;
+        btnToLog.Font = new Font(buf.FontFamily, buf.Size, FontStyle.Underline);
+        btnToLog.ForeColor = Pallette.DarkAccent;
+    }
+
+    private void BtnToLog_MouseLeave(object? sender, EventArgs e)
+    {
+        Font buf = btnToLog.Font;
+        btnToLog.Font = new Font(buf.FontFamily, buf.Size, FontStyle.Regular);
+        btnToLog.ForeColor = Pallette.MainAccent;
+    }
+
+    private void Rtb_TextChanged(object? sender, EventArgs e)
+    {
     }
 
     private void BtnReg_Click(object? sender, EventArgs e)
     {
         lblError.Hide();
         switch (
-            AuthService.RegUser(txtName.Text, txtPassword.Text, txtRepeatPassword.Text)
+            AuthService.RegUser(txtName.TbText, txtPassword.TbText, txtRepPassword.TbText)
         )
         {
             case RegResult.Success:
                 Hide();
-                var mainForm = new MainPageForm();
+                var mainForm = new MainPageForm(1920, 1080);
                 mainForm.FormClosed += (_, __) => Close();
                 mainForm.Show();
 
                 break;
 
-            case RegResult.NameTaken:
-                lblError.Text = "User with that name already exists";
+            case RegResult.PasswordMismatch:
+                lblError.Text = "Passwords don't match";
                 lblError.Show();
                 break;
 
-            case RegResult.PasswordMismatch:
-                lblError.Text = "Passwords don't match";
+            case RegResult.InvalidPasswordFormat:
+                lblError.Text = "Invalid Password";
                 lblError.Show();
                 break;
 
@@ -227,15 +312,17 @@
                 lblError.Show();
                 break;
 
-            case RegResult.InvalidPasswordFormat:
-                lblError.Text = "Invalid Password Format";
+            case RegResult.NameTaken:
+                lblError.Text = "User with that name already exists";
                 lblError.Show();
                 break;
         }
     }
 
-    private void BtnToLogin_Click(object? sender, EventArgs e)
+    private void BtnToLog_Click(object? sender, EventArgs e)
     {
         Close();
     }
+
+
 }

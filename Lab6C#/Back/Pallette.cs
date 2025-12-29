@@ -4,6 +4,7 @@ public static class Pallette
 {
     public static readonly Color MainAccent =       Color.FromArgb(231, 0, 11);
     public static readonly Color SecAccent =        Color.FromArgb(232, 131, 136);
+    public static readonly Color LightAccent =      Color.FromArgb(250, 204, 206);
     public static readonly Color DarkAccent =       Color.FromArgb(193, 0, 7);
     public static readonly Color Error =            Color.Red;
     public static readonly Color Warning =          Color.Yellow;

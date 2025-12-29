@@ -8,6 +8,9 @@ public class Header : FlowLayoutPanel
     private int WIDTH;
     private int HEIGHT = 65;
 
+    private System.Windows.Forms.Button btnLogo;
+    public event Action LogoClicked;
+
     private IMessageFilter menuFilter;
 
     private class ClickOutsideMenuFilter : IMessageFilter
@@ -55,6 +58,7 @@ public class Header : FlowLayoutPanel
         Parent = parent;
 
         InitializeComponent();
+        btnLogo.Click += (s, e) => LogoClicked?.Invoke();
     }
 
     private void InitializeComponent()
@@ -85,7 +89,7 @@ public class Header : FlowLayoutPanel
         };
         il1.Images.Add(Image.FromFile("Images/Train.png"));
 
-        var btnLogo = new System.Windows.Forms.Button
+        btnLogo = new System.Windows.Forms.Button
         {
             Margin = new Padding(50, 0, 0, 0),
             Padding = new Padding(0),
@@ -118,7 +122,7 @@ public class Header : FlowLayoutPanel
         var btnSettings = new DropDownRoundedButton
         {
             Margin = new Padding(WIDTH - 670, 13, 0, 0),
-            Padding = new Padding(5, 0, 0, 0),
+            Padding = new Padding(0),
 
             ForeColor = Color.Black,
             BackColor = Color.White,
@@ -141,7 +145,7 @@ public class Header : FlowLayoutPanel
         var btnProfile = new DropDownRoundedButton
         {
             Margin = new Padding(20, 13, 0, 0),
-            Padding = new Padding(5, 0, 0, 0),
+            Padding = new Padding(0),
 
             ForeColor = Color.Black,
             BackColor = Color.White,
@@ -186,27 +190,50 @@ public class Header : FlowLayoutPanel
         Controls.Add(closeButton);
         closeButton.Click += CloseButton_Click;
 
-        var menu = new AutoSizedMenuPanel();
-        menu.Width = 130;
-        menu.AddItem("Profile", () => MessageBox.Show("Profile!!"), Image.FromFile("Images/Train.png"));
-        menu.AddItem("Logout", () => SettingsButton_Logout());
-        menu.Visible = false;
-        Parent.Controls.Add(menu);
+        var settingsMenu = new AutoSizedMenuPanel();
+        settingsMenu.Width = 130;
+        settingsMenu.AddItem("Profile", () => MessageBox.Show("Profile!!"), Image.FromFile("Images/Train.png"));
+        settingsMenu.Visible = false;
+        Parent.Controls.Add(settingsMenu);
 
         btnSettings.Click += (s, e) =>
         {
-            if (menu.Visible)
+            if (settingsMenu.Visible)
             {
-                menu.Hide();
+                settingsMenu.Hide();
                 return;
             }
 
-            menu.Location = new Point(btnSettings.Left, btnSettings.Bottom);
-            menu.Visible = true;
-            menu.BringToFront();
+            settingsMenu.Location = new Point(btnSettings.Left, btnSettings.Bottom);
+            settingsMenu.Visible = true;
+            settingsMenu.BringToFront();
 
             if (menuFilter == null)
-                menuFilter = new ClickOutsideMenuFilter(menu, btnSettings);
+                menuFilter = new ClickOutsideMenuFilter(settingsMenu, btnSettings);
+
+            Application.AddMessageFilter(menuFilter);
+        };
+
+        var profileMenu = new AutoSizedMenuPanel();
+        profileMenu.Width = 130;
+        profileMenu.AddItem("Logout", () => SettingsButton_Logout());
+        profileMenu.Visible = false;
+        Parent.Controls.Add(profileMenu);
+
+        btnProfile.Click += (s, e) =>
+        {
+            if (profileMenu.Visible)
+            {
+                profileMenu.Hide();
+                return;
+            }
+
+            profileMenu.Location = new Point(btnProfile.Left, btnProfile.Bottom);
+            profileMenu.Visible = true;
+            profileMenu.BringToFront();
+
+            if (menuFilter == null)
+                menuFilter = new ClickOutsideMenuFilter(profileMenu, btnProfile);
 
             Application.AddMessageFilter(menuFilter);
         };

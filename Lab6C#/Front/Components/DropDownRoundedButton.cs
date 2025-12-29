@@ -15,18 +15,24 @@ public class DropDownRoundedButton : UserControl
     private Color normalBack = Color.White;
     private Color hoverBack = Color.FromArgb(245, 245, 245);
     private Color pressedBack = Color.FromArgb(230, 230, 230);
-    private Color disabledBack = Color.FromArgb(220, 220, 220);
+    private Color disabledBackColor = Color.FromArgb(220, 220, 220);
     private Color hoverForeColor = Color.Empty;    // Empty = использовать ForeColor
     private Color pressedForeColor = Color.Empty;
+    private Color disabledForeColor = Color.Empty;
+    private Color disabledBorderColor = Color.LightGray;
     private Image icon;
     private string label = "Button";
     private Padding contentPadding = new Padding(8);
     private TextFormatFlags buttonTextFormat = TextFormatFlags.Left;
+    private int iconHeight = 0;
 
     private bool isHovered = false;
     private bool isPressed = false;
+    private bool disabled = false;
 
-    private ContextMenuStrip previousMenu = null;
+    private bool showSelected = false;
+
+    private AutoSizedMenuPanel previousMenu = null;
 
     [Browsable(true), Category("Appearance")]
     public int BorderRadius { get => borderRadius; set { borderRadius = Math.Max(0, value); Invalidate(); } }
@@ -53,7 +59,13 @@ public class DropDownRoundedButton : UserControl
     public Color PressedBackColor { get => pressedBack; set { pressedBack = value; Invalidate(); } }
 
     [Browsable(true), Category("Appearance")]
-    public Color DisabledBackColor { get => disabledBack; set { disabledBack = value; Invalidate(); } }
+    public Color DisabledBackColor { get => disabledBackColor; set { disabledBackColor = value; Invalidate(); } }
+
+    [Browsable(true), Category("Appearance")]
+    public Color DisabledForeColor { get => disabledForeColor; set { disabledForeColor = value; Invalidate(); } }
+
+    [Browsable(true), Category("Appearance")]
+    public Color DisabledBorderColor { get => disabledBorderColor; set { disabledBorderColor = value; Invalidate(); } }
 
     [Browsable(true), Category("Appearance")]
     public Color HoverForeColor { get => hoverForeColor; set { hoverForeColor = value; Invalidate(); } }
@@ -70,22 +82,28 @@ public class DropDownRoundedButton : UserControl
     [Browsable(true), Category("Appearance")]
     public TextFormatFlags ButtonTextFormat { get => buttonTextFormat; set { buttonTextFormat = value; Invalidate(); } }
 
-    private ContextMenuStrip dropDownMenu;
+    [Browsable(true), Category("Appearance")]
+    public int IconHeight { get => iconHeight; set { iconHeight = value; Invalidate(); } }
+
+    [Browsable(true), Category("Appearance")]
+    public bool ShowSelected { get => showSelected; set { showSelected = value; Invalidate(); } }
+
+    private AutoSizedMenuPanel dropDownMenu;
     [Browsable(true), Category("Behavior"), Description("Контекстное меню, которое будет показано по клику")]
-    public ContextMenuStrip DropDownMenu
+    public AutoSizedMenuPanel DropDownMenu
     {
         get => dropDownMenu;
         set
         {
             if (previousMenu != null)
             {
-                previousMenu.Closed -= DropDownMenu_Closed;
+                //previousMenu.Closed -= DropDownMenu_Closed;
             }
             dropDownMenu = value;
             previousMenu = dropDownMenu;
             if (dropDownMenu != null)
             {
-                dropDownMenu.Closed += DropDownMenu_Closed;
+                //dropDownMenu.Closed += DropDownMenu_Closed;
             }
             Invalidate();
         }
@@ -123,10 +141,10 @@ public class DropDownRoundedButton : UserControl
         rect.Inflate(-1, -1);
 
         // выбирать цвет по состоянию
-        Color fill = Enabled ? (isPressed ? pressedBack : (isHovered ? hoverBack : normalBack)) : disabledBack;
+        Color fill = Enabled ? (isPressed ? pressedBack : (isHovered ? hoverBack : normalBack)) : disabledBackColor;
 
         // цвет границы в зависимости от состояния
-        Color actualBorder = isPressed ? pressedBorderColor : (isHovered ? hoverBorderColor : borderColor);
+        Color actualBorder = Enabled ? (isPressed ? pressedBorderColor : (isHovered ? hoverBorderColor : borderColor)) : disabledBorderColor;
 
         int radius = Math.Min(BorderRadius, Height / 2);
         using (var path = GetRoundPath(rect, radius))
@@ -152,12 +170,12 @@ public class DropDownRoundedButton : UserControl
         int h = rect.Height - contentPadding.Vertical;
 
         // если есть иконка — размещаем слева
-        int iconSize = Math.Min(24, h);
+        int iconSize = iconHeight == 0 ? Math.Min(24, h) : Math.Min(24, iconHeight);
         if (icon != null)
         {
-            var iconRect = new Rectangle(x, rect.Top + (rect.Height - iconSize) / 2, iconSize, iconSize);
+            var iconRect = new Rectangle(x + Padding.Left, rect.Top + (rect.Height - iconSize) / 2, iconSize, iconSize);
             g.DrawImage(icon, iconRect);
-            x += iconSize + 6; // отступ после иконки
+            x += iconSize + 6 + Padding.Left; // отступ после иконки
         }
 
         // текст (оставляем правый отступ для стрелочки выпадающего меню)
@@ -172,7 +190,14 @@ public class DropDownRoundedButton : UserControl
         else if (isHovered && hoverForeColor != Color.Empty) textColor = hoverForeColor;
         else textColor = ForeColor;
 
-        TextRenderer.DrawText(g, label, Font, textRect, textColor, flags);
+        if (showSelected)
+        if(DropDownMenu != null)
+            if (DropDownMenu.SelectedItem != null)
+                label = DropDownMenu.SelectedItem.Text;
+            else if (showSelected == true)
+                label = Text;
+
+            TextRenderer.DrawText(g, label, Font, textRect, textColor, flags);
 
         // стрелочка для выпадающего меню
         if (DropDownMenu != null)
@@ -184,14 +209,24 @@ public class DropDownRoundedButton : UserControl
 
     private void DrawDownArrow(Graphics g, Point p, Color color)
     {
-        var pts = new Point[]
+        // Настраиваем толщину и скругление концов линий
+        using (var pen = new Pen(Enabled ? color : Color.Gray, 2f)) // 2f - толщина линии
         {
-            new Point(p.X - 5, p.Y - 2),
-            new Point(p.X + 5, p.Y - 2),
-            new Point(p.X, p.Y + 4)
-        };
-        using (var br = new SolidBrush(Enabled ? color : Color.Gray))
-            g.FillPolygon(br, pts);
+            pen.StartCap = LineCap.Round;
+            pen.EndCap = LineCap.Round;
+            pen.LineJoin = LineJoin.Round;
+
+            // Определяем точки для "галочки"
+            // p — это центральная точка по вертикали и горизонтали в отведенном месте
+            Point[] pts = new Point[]
+            {
+            new Point(p.X - 4, p.Y - 2), // Левое плечо
+            new Point(p.X, p.Y + 2),     // Центр (низ)
+            new Point(p.X + 4, p.Y - 2)  // Правое плечо
+            };
+
+            g.DrawLines(pen, pts);
+        }
     }
 
     private GraphicsPath GetRoundPath(Rectangle r, int radius)
@@ -253,23 +288,23 @@ public class DropDownRoundedButton : UserControl
         if (e.KeyCode == Keys.Space || e.KeyCode == Keys.Enter) { isPressed = true; Invalidate(); }
         base.OnKeyDown(e);
     }
-    protected override void OnKeyUp(KeyEventArgs e)
-    {
-        if ((e.KeyCode == Keys.Space || e.KeyCode == Keys.Enter) && isPressed)
-        {
-            if (DropDownMenu != null && DropDownMenu.Items.Count > 0)
-            {
-                isPressed = true;
-                Invalidate();
-                DropDownMenu.Show(this, new Point(0, Height));
-            }
-            else OnClick(EventArgs.Empty);
-        }
-        // сброс состояния (если меню не показано — сбросим тут же; если показано — сбросит Closed)
-        if (DropDownMenu == null) isPressed = false;
-        Invalidate();
-        base.OnKeyUp(e);
-    }
+    //protected override void OnKeyUp(KeyEventArgs e)
+    //{
+    //    if ((e.KeyCode == Keys.Space || e.KeyCode == Keys.Enter) && isPressed)
+    //    {
+    //        if (DropDownMenu != null && DropDownMenu.Items.Count > 0)
+    //        {
+    //            isPressed = true;
+    //            Invalidate();
+    //            DropDownMenu.Show(this, new Point(0, Height));
+    //        }
+    //        else OnClick(EventArgs.Empty);
+    //    }
+    //    // сброс состояния (если меню не показано — сбросим тут же; если показано — сбросит Closed)
+    //    if (DropDownMenu == null) isPressed = false;
+    //    Invalidate();
+    //    base.OnKeyUp(e);
+    //}
 
     protected override void OnParentChanged(EventArgs e)
     {

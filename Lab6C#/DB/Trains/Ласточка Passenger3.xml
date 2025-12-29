@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Train Type="Passenger" Condition="Running" Model="Ласточка" ReleaseDate="0001-01-01T00:00:00" Mileage="10000" Id="3">
+  <Carrieges>
+    <PassengerCarriege CarType="Cargo" carryingCapacity="64" comfortLevel="1">
+      <type>Seat</type>
+      <freeSeats>64</freeSeats>
+    </PassengerCarriege>
+    <PassengerCarriege CarType="Cargo" carryingCapacity="20" comfortLevel="2">
+      <type>Compartment</type>
+      <freeSeats>20</freeSeats>
+    </PassengerCarriege>
+  </Carrieges>
+</Train>

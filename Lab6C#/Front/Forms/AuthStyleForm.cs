@@ -39,11 +39,11 @@ public class AuthStyleForm : RoundedForm1
         var closeButton = new DropDownRoundedButton
         {
             Margin = new Padding(0, 10, 10, 10),
-            Padding = new Padding(7, 0, 0, 0),
+            Padding = new Padding(0, 0, 0, 0),
 
             ForeColor = Color.Black,
             BackColor = Color.White,
-            BorderColor = Color.White,//FromArgb(250, 204, 206),
+            BorderColor = Color.White,
             BorderRadius = 7,
             BorderSize = 1,
             Size = new Size(30, 30),

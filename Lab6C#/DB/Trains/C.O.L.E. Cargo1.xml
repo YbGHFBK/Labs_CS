@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Train Type="Cargo" Condition="Running" Model="C.O.L.E." ReleaseDate="0001-01-01T00:00:00" Mileage="0" Id="1">
+  <Carrieges>
+    <Locomotive CarType="Cargo" carryingCapacity="0" />
+    <CargoCarriege CarType="Cargo" carryingCapacity="0" Type="Covered" />
+    <CargoCarriege CarType="Cargo" carryingCapacity="0" Type="Covered" />
+    <Locomotive CarType="Cargo" carryingCapacity="0" />
+  </Carrieges>
+</Train>

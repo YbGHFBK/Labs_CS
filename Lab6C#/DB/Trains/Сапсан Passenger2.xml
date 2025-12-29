@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Train Type="Passenger" Condition="Running" Model="Сапсан" ReleaseDate="0001-01-01T00:00:00" Mileage="200" Id="2">
+  <Carrieges />
+</Train>

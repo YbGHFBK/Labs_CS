@@ -11,15 +11,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Images\CalendarDark.png" />
+    <None Remove="Images\CalendarWhite.png" />
     <None Remove="Images\Cross.png" />
     <None Remove="Images\Logo.png" />
     <None Remove="Images\Profile.png" />
+    <None Remove="Images\Search.png" />
+    <None Remove="Images\SearchWhite.png" />
     <None Remove="Images\Settings.png" />
     <None Remove="Images\Train.png" />
     <None Remove="Images\User.png" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Images\CalendarDark.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\CalendarWhite.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Images\Cross.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -28,6 +38,12 @@
     </Content>
     <Content Include="Images\Profile.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\Search.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Images\SearchWhite.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\Settings.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -42,6 +58,8 @@
 
   <ItemGroup>
     <Folder Include="bin\Debug\net8.0-windows\" />
+    <Folder Include="DB\Routes\" />
+    <Folder Include="DB\Tickets\" />
   </ItemGroup>
 
 </Project>

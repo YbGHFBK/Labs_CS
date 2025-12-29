@@ -10,25 +10,14 @@ public class Station : IHasId, IComparable<Station>
     [XmlAttribute("Id")]
     public int Id { get; set; }
 
-    public Station() { }
-
-    public Station(string country, string city, List<Station> stations)
+    public Station()
     {
-        this.country = country;
-        this.city = city;
-        Id = IdGenerator.GetNextId(stations);
-    }
-
-    public Station(string country, string city, int id)
-    {
-        this.country = country;
-        this.city = city;
-        Id = id;
+        Id = DB.GetNextId(GetType());
     }
 
     public override string ToString()
     {
-        return $"{country}, {city} - {Id}";
+        return $"{country}, {city}";
     }
 
     public int CompareTo(Station? other)
